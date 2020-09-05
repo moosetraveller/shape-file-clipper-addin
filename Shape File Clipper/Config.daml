@@ -1,0 +1,38 @@
+﻿<ArcGIS defaultAssembly="Shape File Clipper.dll" defaultNamespace="Shape_File_Clipper" xmlns="http://schemas.esri.com/DADF/Registry" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.esri.com/DADF/Registry file:///C:/Program%20Files/ArcGIS/Pro/bin/ArcGIS.Desktop.Framework.xsd">
+  <AddInInfo id="{aff6a174-acde-4b7a-bfbd-3c6e21ef81d3}" version="1.0" desktopVersion="2.6.24783">
+    <Name>Shape File Clipper for ArcGIS Pro</Name>
+    <Description>With the Shape File Clipper, cartographers and GIS technician can clip their datasets to a specific study area and optionally re-project their clipped datasets to a desired projection.</Description>
+    <Image>Images\AddinDesktop32.png</Image>
+    <Author>Thomas Zuberbuehler</Author>
+    <Company>Geomo</Company>
+    <Date>9/4/2020 7:24:58 PM</Date>
+    <Subject>Framework</Subject>
+    <!-- Note subject can be one or more of these topics:
+                    Content, Framework, Editing, Geodatabase, Geometry, Geoprocessing, Layouts, Map Authoring, Map Exploration -->
+  </AddInInfo>
+  <modules>
+    <insertModule id="Shape_File_Clipper_Module" className="ShapeFileClipperModule" autoLoad="false" caption="Shape File Clipper Module">
+      <!-- uncomment to have the control hosted on a separate tab-->
+      <tabs>
+        <tab id="Shape_File_Clipper_Cartomo_Tools_Tab" caption="Cartomo Tools">
+          <group refID="Shape_File_Clipper_Tool_Group" />
+        </tab>
+      </tabs>
+      <groups>
+        <!-- comment this out if you have no controls on the Addin tab to avoid
+              an empty group-->
+        <group id="Shape_File_Clipper_Tool_Group" caption="Tools">
+          <!-- host controls within groups -->
+          <button refID="Shape_File_Clipper_Button" size="large" />
+        </group>
+      </groups>
+      <controls>
+        <button id="Shape_File_Clipper_Button" caption="Shape File Clipper" className="ShowShapeFileClipper" loadOnClick="true" smallImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GenericButtonPurple16.png" largeImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GenericButtonPurple32.png">
+			<tooltip heading="Shape File Clipper">
+				Clips datasets to a desired study area and optionally re-projects the clipped datasets to a desired projection.<disabledText />
+			</tooltip>
+        </button>
+      </controls>
+    </insertModule>
+  </modules>
+</ArcGIS>
