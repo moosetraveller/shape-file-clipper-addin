@@ -24,6 +24,7 @@ using ArcGIS.Desktop.Framework.Threading;
 using ArcGIS.Desktop.Framework.Dialogs;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using Geomo.Util;
+using MessageBox = ArcGIS.Desktop.Framework.Dialogs.MessageBox;
 using Path = System.IO.Path;
 
 namespace Shape_File_Clipper
@@ -185,6 +186,8 @@ namespace Shape_File_Clipper
             var cancelHandler = new CancelableProgressorSource(progressDialog);
             var currentExecutionTime = DateTime.Now.ToString("yyyyMMddHHmmss");
 
+            var ignoredShapeFiles = new HashSet<string>();
+
             foreach (var shapeFile in _selectedShapeFiles)
             {
 
@@ -199,24 +202,40 @@ namespace Shape_File_Clipper
                     case OverwriteMode.Skip:
                         if (File.Exists(outputPath))
                         {
+                            ignoredShapeFiles.Add(shapeFile);
                             continue;
                         }
                         break;
                     case OverwriteMode.Backup:
                         var hasBackup = await DoBackupFileIfExists(outputPath, currentExecutionTime, cancelHandler);
-                        if (!hasBackup)
+                        if (hasBackup)
                         {
-                            // TODO we should write this to a log ...
-                            continue;
+                            break;
                         }
-                        break;
+                        ignoredShapeFiles.Add(shapeFile);
+                        continue;
                 }
 
-                await ClipShapeFile(shapeFile, clipExtent, outputPath, cancelHandler);
+                var hasFailed = !await ClipShapeFile(shapeFile, clipExtent, outputPath, cancelHandler);
+                if (hasFailed)
+                {
+                    ignoredShapeFiles.Add(shapeFile);
+                }
 
             }
 
             progressDialog.Hide();
+
+            if (ignoredShapeFiles.Count > 0)
+            {
+                var message = string.Join("\n", ignoredShapeFiles);
+                MessageBox.Show(this, message, "Finished with ignored shape files", MessageBoxButton.OK);
+            }
+            else
+            {
+                MessageBox.Show(this, "All shape files successfully clipped.", "Finished", MessageBoxButton.OK);
+            }
+
         }
 
         private void OnSelectOutputDirectoryClicked(object sender, RoutedEventArgs e)
