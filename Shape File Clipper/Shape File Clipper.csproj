@@ -130,6 +130,7 @@
     <AddInContent Include="DarkImages\AddInDesktop32.png" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ClipController.cs" />
     <Compile Include="ComboBoxValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShapeFileClipper.xaml.cs">

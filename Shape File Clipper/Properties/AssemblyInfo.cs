@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Shape_File_Clipper")]
+[assembly: AssemblyTitle("ShapeFileClipper")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Acme")]
-[assembly: AssemblyProduct("Shape_File_Clipper")]
-[assembly: AssemblyCopyright("Copyright © Acme 2020")]
+[assembly: AssemblyCompany("Cartomo")]
+[assembly: AssemblyProduct("ShapeFileClipper")]
+[assembly: AssemblyCopyright("Copyright © 2020 Thomas Zuberbuehler")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
