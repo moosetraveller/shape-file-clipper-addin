@@ -141,6 +141,7 @@ namespace Shape_File_Clipper
 
         private async Task<bool> ClipShapeFile(string shapeFile, string clipExtent, string outputPath, CancelableProgressorSource cancelHandler)
         {
+
             var clipToolParams
                 = await QueuedTask.Run(() => Geoprocessing.MakeValueArray(shapeFile, clipExtent, outputPath));
 
@@ -148,10 +149,12 @@ namespace Shape_File_Clipper
                 cancelHandler.Progressor, GPExecuteToolFlags.None | GPExecuteToolFlags.GPThread);
 
             return !result.IsFailed;
+
         }
 
         private async Task<bool> CopyShapeFile(string shapeFile, string targetPath, CancelableProgressorSource cancelHandler)
         {
+
             var copyToolParams
                 = await QueuedTask.Run(() => Geoprocessing.MakeValueArray(shapeFile, targetPath));
 
@@ -163,6 +166,7 @@ namespace Shape_File_Clipper
 
         private async Task<bool> DoBackupFileIfExists(string shapeFilePath, string backupFolderName, CancelableProgressorSource cancelHandler)
         {
+
             if (!File.Exists(shapeFilePath))
             {
                 return true;
@@ -178,50 +182,54 @@ namespace Shape_File_Clipper
 
         }
 
+        private async Task<bool> ProcessShapeFile(string shapeFile, string backupFolderName, CancelableProgressorSource cancelHandler)
+        {
+
+            var shapeFileName = $"{Path.GetFileNameWithoutExtension(shapeFile)}_{this.PostfixString.Text}.shp";
+            var outputDirectory = this.OutputDirectoryTextBox.Text;
+            var outputPath = Path.Combine(outputDirectory, shapeFileName);
+            var clipExtent = this.ClipExtentTextBox.Text;
+
+            var overwriteMode = ((ComboBoxValue<OverwriteMode>)OverwriteModeComboBox.SelectedItem).Value;
+            switch (overwriteMode)
+            {
+                case OverwriteMode.Skip:
+                    if (File.Exists(outputPath))
+                    {
+                        return false;
+                    }
+                    break;
+                case OverwriteMode.Backup:
+                    var hasBackup = await DoBackupFileIfExists(outputPath, backupFolderName, cancelHandler);
+                    if (hasBackup)
+                    {
+                        break;
+                    }
+                    return false;
+            }
+
+            return await ClipShapeFile(shapeFile, clipExtent, outputPath, cancelHandler);
+
+        }
+
         private async void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
+
             var progressDialog = new ProgressDialog("Running Shape File Clipper ...", "Cancel");
             progressDialog.Show();
 
             var cancelHandler = new CancelableProgressorSource(progressDialog);
-            var currentExecutionTime = DateTime.Now.ToString("yyyyMMddHHmmss");
+            var backupFolderName = DateTime.Now.ToString("yyyyMMddHHmmss");
 
-            var ignoredShapeFiles = new HashSet<string>();
+            var ignoredShapeFiles = new HashSet<string>(); 
 
             foreach (var shapeFile in _selectedShapeFiles)
             {
-
-                var shapeFileName = $"{Path.GetFileNameWithoutExtension(shapeFile)}_{this.PostfixString.Text}.shp";
-                var outputDirectory = this.OutputDirectoryTextBox.Text;
-                var outputPath = Path.Combine(outputDirectory, shapeFileName);
-                var clipExtent = this.ClipExtentTextBox.Text;
-
-                var overwriteMode = ((ComboBoxValue<OverwriteMode>) OverwriteModeComboBox.SelectedItem).Value;
-                switch (overwriteMode)
-                {
-                    case OverwriteMode.Skip:
-                        if (File.Exists(outputPath))
-                        {
-                            ignoredShapeFiles.Add(shapeFile);
-                            continue;
-                        }
-                        break;
-                    case OverwriteMode.Backup:
-                        var hasBackup = await DoBackupFileIfExists(outputPath, currentExecutionTime, cancelHandler);
-                        if (hasBackup)
-                        {
-                            break;
-                        }
-                        ignoredShapeFiles.Add(shapeFile);
-                        continue;
-                }
-
-                var hasFailed = !await ClipShapeFile(shapeFile, clipExtent, outputPath, cancelHandler);
+                var hasFailed = !await ProcessShapeFile(shapeFile, backupFolderName, cancelHandler);
                 if (hasFailed)
                 {
                     ignoredShapeFiles.Add(shapeFile);
                 }
-
             }
 
             progressDialog.Hide();
@@ -240,6 +248,7 @@ namespace Shape_File_Clipper
 
         private void OnSelectOutputDirectoryClicked(object sender, RoutedEventArgs e)
         {
+
             var dialog = new CommonOpenFileDialog
             {
                 IsFolderPicker = true
@@ -249,10 +258,12 @@ namespace Shape_File_Clipper
             {
                 this.OutputDirectoryTextBox.Text = dialog.FileName;
             }
+
         }
 
         private void OnSelectClipExtentClicked(object sender, RoutedEventArgs e)
         {
+
             var dialog = new OpenFileDialog
             {
                 DefaultExt = ".shp", 
@@ -263,6 +274,7 @@ namespace Shape_File_Clipper
             {
                 ClipExtentTextBox.Text = dialog.FileName;
             }
+
         }
     }
 }
