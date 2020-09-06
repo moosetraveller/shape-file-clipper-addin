@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="Shape File Clipper by Cartomo" Height="328.049" Width="509.756"
+        Title="Shape File Clipper by Cartomo" Height="370.5" Width="645.756"
         WindowStartupLocation="CenterOwner" ScrollViewer.VerticalScrollBarVisibility="Disabled" ShowMaxRestoreButton="False" ResizeMode="NoResize"
     >
     <controls:ProWindow.Resources>
@@ -17,18 +17,24 @@
         </ResourceDictionary>
     </controls:ProWindow.Resources>
     <Grid>
-        <ListBox x:Name="SelectionList" HorizontalAlignment="Left" Height="79" Margin="10,41,0,0" VerticalAlignment="Top" Width="391" SelectionMode="Extended" />
-        <Button Content="Add File" HorizontalAlignment="Left" Height="23" Margin="406,41,0,0" VerticalAlignment="Top" Width="89" Click="OnAddFileClicked"/>
-        <Button x:Name="RemoveFileButton" Content="Remove File" HorizontalAlignment="Left" Height="23" Margin="406,69,0,0" VerticalAlignment="Top" Width="89" Click="OnRemoveFileClicked" IsEnabled="False"/>
-        <Button x:Name="ClearSelectionButton" Content="Clear Selection" HorizontalAlignment="Left" Height="23" Margin="406,97,0,0" VerticalAlignment="Top" Width="89" Click="OnClearSelectionClicked" IsEnabled="False"/>
-        <Label Content="Shape Files" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
-        <Label Content="Clip Extent" HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top" Width="160" FontWeight="Bold"/>
-        <TextBox x:Name="ClipExtentTextBox" HorizontalAlignment="Left" Height="23" Margin="10,156,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="391" IsEnabled="False"/>
-        <Button Content="Select" HorizontalAlignment="Left" Height="23" Margin="406,156,0,0" VerticalAlignment="Top" Width="89" Click="OnSelectClipExtentClicked"/>
-        <Label Content="Output Directory" HorizontalAlignment="Left" Margin="10,184,0,0" VerticalAlignment="Top" Width="160" FontWeight="Bold"/>
-        <TextBox x:Name="OutputDirectoryTextBox"  HorizontalAlignment="Left" Height="23" Margin="10,215,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="391" IsEnabled="False"/>
-        <Button Content="Select" HorizontalAlignment="Left" Height="23" Margin="406,215,0,0" VerticalAlignment="Top" Width="89" Click="OnSelectOutputDirectoryClicked" RenderTransformOrigin="0.535,-0.015"/>
-        <Button x:Name="ExecuteButton" Content="Run" HorizontalAlignment="Left" Height="22" Margin="406,268,0,0" VerticalAlignment="Top" Width="89" Click="OnExecuteClicked" RenderTransformOrigin="0.535,-0.015" IsEnabled="False"/>
-        <Button Content="Close" HorizontalAlignment="Left" Height="22" Margin="312,268,0,0" VerticalAlignment="Top" Width="89" Click="OnCloseClicked" RenderTransformOrigin="0.535,-0.015"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <ListBox x:Name="SelectionList" HorizontalAlignment="Left" Height="80" Margin="133,21,0,0" VerticalAlignment="Top" Width="391" SelectionMode="Extended" />
+        <Button Content="Add File" HorizontalAlignment="Left" Height="24" Margin="531,21,0,0" VerticalAlignment="Top" Width="89" Click="OnAddFileClicked"/>
+        <Button x:Name="RemoveFileButton" Content="Remove File" HorizontalAlignment="Left" Height="24" Margin="531,49,0,0" VerticalAlignment="Top" Width="89" Click="OnRemoveFileClicked" IsEnabled="False"/>
+        <Button x:Name="ClearSelectionButton" Content="Clear Selection" HorizontalAlignment="Left" Height="24" Margin="531,77,0,0" VerticalAlignment="Top" Width="89" Click="OnClearSelectionClicked" IsEnabled="False"/>
+        <Label Content="Shape Files" HorizontalAlignment="Left" Margin="15,21,0,0" VerticalAlignment="Top" FontWeight="Bold" Width="112"/>
+        <Label Content="Clip Extent" HorizontalAlignment="Left" Margin="15,118,0,0" VerticalAlignment="Top" Width="112" FontWeight="Bold" Height="28"/>
+        <TextBox x:Name="ClipExtentTextBox" HorizontalAlignment="Left" Height="22" Margin="133,121,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="391" IsEnabled="False"/>
+        <Button Content="Select" HorizontalAlignment="Left" Height="22" Margin="531,121,0,0" VerticalAlignment="Top" Width="89" Click="OnSelectClipExtentClicked"/>
+        <Label Content="Output Directory" HorizontalAlignment="Left" Margin="15,160,0,0" VerticalAlignment="Top" Width="112" FontWeight="Bold"/>
+        <TextBox x:Name="OutputDirectoryTextBox"  HorizontalAlignment="Left" Height="24" Margin="133,161,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="391" IsEnabled="False"/>
+        <Button Content="Select" HorizontalAlignment="Left" Height="24" Margin="531,161,0,0" VerticalAlignment="Top" Width="89" Click="OnSelectOutputDirectoryClicked" RenderTransformOrigin="0.535,-0.015"/>
+        <Button x:Name="ExecuteButton" Content="Run" HorizontalAlignment="Left" Height="22" Margin="531,298,0,0" VerticalAlignment="Top" Width="89" Click="OnExecuteClicked" RenderTransformOrigin="0.535,-0.015" IsEnabled="False"/>
+        <Button Content="Close" HorizontalAlignment="Left" Height="22" Margin="437,298,0,0" VerticalAlignment="Top" Width="89" Click="OnCloseClicked" RenderTransformOrigin="0.535,-0.015"/>
+        <Label Content="Postfix" HorizontalAlignment="Left" Margin="15,225,0,0" VerticalAlignment="Top" Width="112" FontWeight="Bold"/>
+        <TextBox x:Name="PostfixString"  HorizontalAlignment="Left" Height="24" Margin="133,226,0,0" TextWrapping="Wrap" Text="_Clipped" VerticalAlignment="Top" Width="391"/>
+        <ComboBox x:Name="OverwriteModeComboBox" HorizontalAlignment="Left" Margin="133,190,0,0" VerticalAlignment="Top" Width="391"/>
     </Grid>
 </controls:ProWindow>

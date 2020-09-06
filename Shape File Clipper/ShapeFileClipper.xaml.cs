@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,9 +20,10 @@ using ArcGIS.Core.Data;
 using ArcGIS.Desktop.Core.Geoprocessing;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
-
-using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Desktop.Framework.Threading;
 using ArcGIS.Desktop.Framework.Dialogs;
+using ArcGIS.Desktop.Framework.Threading.Tasks;
+using Geomo.Util;
 using Path = System.IO.Path;
 
 namespace Shape_File_Clipper
@@ -31,16 +33,42 @@ namespace Shape_File_Clipper
     /// </summary>
     public partial class ShapeFileClipper : ArcGIS.Desktop.Framework.Controls.ProWindow
     {
-        private readonly ObservableCollection<string> _selectedShapeFiles;
+        private ObservableCollection<string> _selectedShapeFiles;
+        private ObservableCollection<ComboBoxValue<OverwriteMode>> _overwriteModes;
+
+        private enum OverwriteMode
+        {
+            Overwrite, Backup, Skip
+        }
         
         public ShapeFileClipper()
         {
             InitializeComponent();
 
-            this._selectedShapeFiles = new ObservableCollection<string>();
-            this.SelectionList.ItemsSource = this._selectedShapeFiles;
+            this.InitSelectionList();
+            this.InitOverwriteModeComboBox();
 
             this.SubscribeEventHandlers();
+        }
+
+        private void InitSelectionList()
+        {
+            this._selectedShapeFiles = new ObservableCollection<string>();
+            this.SelectionList.ItemsSource = this._selectedShapeFiles;
+        }
+
+        private void InitOverwriteModeComboBox()
+        {
+            var defaultOverwriteMode = 
+                new ComboBoxValue<OverwriteMode>(OverwriteMode.Overwrite, "Overwrite existing files");
+            this._overwriteModes = new ObservableCollection<ComboBoxValue<OverwriteMode>>()
+            {
+                defaultOverwriteMode,
+                new ComboBoxValue<OverwriteMode>(OverwriteMode.Backup, "Backup existing files"),
+                new ComboBoxValue<OverwriteMode>(OverwriteMode.Skip, "Skip existing files")
+            };
+            this.OverwriteModeComboBox.SelectedItem = defaultOverwriteMode;
+            this.OverwriteModeComboBox.ItemsSource = this._overwriteModes;
         }
 
         private void SubscribeEventHandlers()
@@ -110,26 +138,81 @@ namespace Shape_File_Clipper
             this.Close();
         }
 
+        private async Task<bool> ClipShapeFile(string shapeFile, string clipExtent, string outputPath, CancelableProgressorSource cancelHandler)
+        {
+            var clipToolParams
+                = await QueuedTask.Run(() => Geoprocessing.MakeValueArray(shapeFile, clipExtent, outputPath));
+
+            IGPResult result = await Geoprocessing.ExecuteToolAsync("analysis.Clip", clipToolParams, null,
+                cancelHandler.Progressor, GPExecuteToolFlags.None | GPExecuteToolFlags.GPThread);
+
+            return !result.IsFailed;
+        }
+
+        private async Task<bool> CopyShapeFile(string shapeFile, string targetPath, CancelableProgressorSource cancelHandler)
+        {
+            var copyToolParams
+                = await QueuedTask.Run(() => Geoprocessing.MakeValueArray(shapeFile, targetPath));
+
+            IGPResult result = await Geoprocessing.ExecuteToolAsync("management.CopyFeatures", copyToolParams, null,
+                cancelHandler.Progressor, GPExecuteToolFlags.None | GPExecuteToolFlags.GPThread);
+
+            return !result.IsFailed;
+        }
+
+        private async Task<bool> DoBackupFileIfExists(string shapeFilePath, string backupFolderName, CancelableProgressorSource cancelHandler)
+        {
+            if (!File.Exists(shapeFilePath))
+            {
+                return true;
+            }
+            var backupDirectory = Path.Combine(Path.GetDirectoryName(shapeFilePath) ?? "", backupFolderName);
+            var backupOutputPath = Path.Combine(backupDirectory, Path.GetFileName(shapeFilePath));
+            if (!Directory.Exists(backupDirectory))
+            {
+                Directory.CreateDirectory(backupDirectory);
+            }
+
+            return await CopyShapeFile(shapeFilePath, backupOutputPath, cancelHandler);
+
+        }
+
         private async void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
             var progressDialog = new ProgressDialog("Running Shape File Clipper ...", "Cancel");
             progressDialog.Show();
 
             var cancelHandler = new CancelableProgressorSource(progressDialog);
+            var currentExecutionTime = DateTime.Now.ToString("yyyyMMddHHmmss");
 
             foreach (var shapeFile in _selectedShapeFiles)
             {
 
-                var shapeFileName = Path.GetFileNameWithoutExtension(shapeFile) + "_Clipped.shp";
-                var outputPath = Path.Combine(this.OutputDirectoryTextBox.Text, shapeFileName);
+                var shapeFileName = $"{Path.GetFileNameWithoutExtension(shapeFile)}_{this.PostfixString.Text}.shp";
+                var outputDirectory = this.OutputDirectoryTextBox.Text;
+                var outputPath = Path.Combine(outputDirectory, shapeFileName);
                 var clipExtent = this.ClipExtentTextBox.Text;
 
-                var parameters = await QueuedTask.Run(() => 
+                var overwriteMode = ((ComboBoxValue<OverwriteMode>) OverwriteModeComboBox.SelectedItem).Value;
+                switch (overwriteMode)
                 {
-                    return Geoprocessing.MakeValueArray(shapeFile, clipExtent, outputPath);
-                });
+                    case OverwriteMode.Skip:
+                        if (File.Exists(outputPath))
+                        {
+                            continue;
+                        }
+                        break;
+                    case OverwriteMode.Backup:
+                        var hasBackup = await DoBackupFileIfExists(outputPath, currentExecutionTime, cancelHandler);
+                        if (!hasBackup)
+                        {
+                            // TODO we should write this to a log ...
+                            continue;
+                        }
+                        break;
+                }
 
-                await Geoprocessing.ExecuteToolAsync("analysis.Clip", parameters, null, cancelHandler.Progressor, GPExecuteToolFlags.None | GPExecuteToolFlags.GPThread);
+                await ClipShapeFile(shapeFile, clipExtent, outputPath, cancelHandler);
 
             }
 
