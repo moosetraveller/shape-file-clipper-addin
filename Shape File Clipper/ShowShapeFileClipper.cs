@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Contracts;
 
-namespace Shape_File_Clipper
+namespace Geomo.ShapeFileClipper
 {
     internal class ShowShapeFileClipper : Button
     {

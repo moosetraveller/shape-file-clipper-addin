@@ -1,7 +1,7 @@
 ﻿using ArcGIS.Desktop.Framework;
 using ArcGIS.Desktop.Framework.Contracts;
 
-namespace Shape_File_Clipper
+namespace Geomo.ShapeFileClipper
 {
     internal class ShapeFileClipperModule : Module
     {
@@ -14,7 +14,7 @@ namespace Shape_File_Clipper
         {
             get
             {
-                return _this ?? (_this = (ShapeFileClipperModule)FrameworkApplication.FindModule("Shape_File_Clipper_Module"));
+                return _this ?? (_this = (ShapeFileClipperModule)FrameworkApplication.FindModule("ShapeFileClipperModule"));
             }
         }
 

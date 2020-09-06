@@ -11,7 +11,7 @@ using Geomo.Util;
 using MessageBox = ArcGIS.Desktop.Framework.Dialogs.MessageBox;
 using Path = System.IO.Path;
 
-namespace Shape_File_Clipper
+namespace Geomo.ShapeFileClipper
 {
     /// <summary>
     /// Interaction logic for ShapeFileClipper.xaml
