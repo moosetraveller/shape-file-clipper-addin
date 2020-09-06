@@ -16,8 +16,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using ArcGIS.Core.Data;
+using ArcGIS.Desktop.Core.Geoprocessing;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
+
+using ArcGIS.Desktop.Framework.Threading.Tasks;
+using ArcGIS.Desktop.Framework.Dialogs;
+using Path = System.IO.Path;
 
 namespace Shape_File_Clipper
 {
@@ -31,86 +36,127 @@ namespace Shape_File_Clipper
         public ShapeFileClipper()
         {
             InitializeComponent();
+
             this._selectedShapeFiles = new ObservableCollection<string>();
             this.SelectionList.ItemsSource = this._selectedShapeFiles;
 
-            this.SelectionList.SelectionChanged += OnSelectionChange;
-            this._selectedShapeFiles.CollectionChanged += OnInputChange;
-            this.ClipExtentTextBox.SelectionChanged += OnInputChange;
-            this.OutputDirectoryTextBox.SelectionChanged += OnInputChange;
+            this.SubscribeEventHandlers();
         }
 
-        private void OnAddFileClick(object sender, RoutedEventArgs routedEventArgs)
+        private void SubscribeEventHandlers()
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.Multiselect = true;
-            dialog.DefaultExt = ".shp";
-            dialog.Filter = "Shape Files|*.shp";
-            if (dialog.ShowDialog() == true)
+            this.SelectionList.SelectionChanged += OnListBoxSelectionChanged;
+
+            this._selectedShapeFiles.CollectionChanged += OnListBoxContentChanged;
+            this._selectedShapeFiles.CollectionChanged += OnInputChanged;
+
+            this.ClipExtentTextBox.SelectionChanged += OnInputChanged;
+            this.OutputDirectoryTextBox.SelectionChanged += OnInputChanged;
+        }
+
+        private void OnAddFileClicked(object sender, RoutedEventArgs routedEventArgs)
+        {
+            var dialog = new OpenFileDialog
             {
-                foreach (var fileName in dialog.FileNames.Except(_selectedShapeFiles))
-                {
-                    this._selectedShapeFiles.Add(fileName);
-                }
+                Multiselect = true, 
+                DefaultExt = ".shp", 
+                Filter = "Shape Files|*.shp"
+            };
+
+            if (dialog.ShowDialog() != true)
+            {
+                return;
+            }
+            
+            foreach (var fileName in dialog.FileNames.Except(_selectedShapeFiles))
+            {
+                this._selectedShapeFiles.Add(fileName);
             }
         }
 
-        private void OnInputChange(object sender, EventArgs e)
+        private void OnInputChanged(object sender, EventArgs e)
         {
-            var doEnableExecuteButton = this._selectedShapeFiles.Count > 0
-                && !string.IsNullOrWhiteSpace(this.ClipExtentTextBox.Text)
-                && !string.IsNullOrWhiteSpace(this.OutputDirectoryTextBox.Text);
-            this.ExecuteButton.IsEnabled = doEnableExecuteButton;
-
-            var doEnableClearAllButton = this._selectedShapeFiles.Count > 0;
-            this.ClearSelectionButton.IsEnabled = doEnableClearAllButton;
+            this.ExecuteButton.IsEnabled = this._selectedShapeFiles.Count > 0
+                                           && !string.IsNullOrWhiteSpace(this.ClipExtentTextBox.Text)
+                                           && !string.IsNullOrWhiteSpace(this.OutputDirectoryTextBox.Text);
         }
 
-        private void OnSelectionChange(object sender, EventArgs e)
+        private void OnListBoxContentChanged(object sender, EventArgs e)
         {
-            var doEnableRemoveButton = this.SelectionList.SelectedItems.Count > 0;
-            this.RemoveFileButton.IsEnabled = doEnableRemoveButton;
+            this.ClearSelectionButton.IsEnabled = this._selectedShapeFiles.Count > 0;
         }
 
-        private void OnRemoveFileClick(object sender, RoutedEventArgs e)
+        private void OnListBoxSelectionChanged(object sender, EventArgs e)
+        {
+            this.RemoveFileButton.IsEnabled = this.SelectionList.SelectedItems.Count > 0;
+        }
+
+        private void OnRemoveFileClicked(object sender, RoutedEventArgs e)
         {
             var selection = (IList) this.SelectionList.SelectedItems;
-            foreach (string selectedFile in new List<string>(selection.Cast<string>()))
+            foreach (var selectedFile in new List<string>(selection.Cast<string>()))
             {
                 this._selectedShapeFiles.Remove(selectedFile);
             }
         }
 
-        private void OnClearSelectionClick(object sender, RoutedEventArgs e)
+        private void OnClearSelectionClicked(object sender, RoutedEventArgs e)
         {
             this._selectedShapeFiles.Clear();
         }
 
-        private void OnCloseClick(object sender, RoutedEventArgs e)
+        private void OnCloseClicked(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
 
-        private void OnExecuteClick(object sender, RoutedEventArgs e)
+        private async void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
+            var progressDialog = new ProgressDialog("Running Shape File Clipper ...", "Cancel");
+            progressDialog.Show();
 
+            var cancelHandler = new CancelableProgressorSource(progressDialog);
+
+            foreach (var shapeFile in _selectedShapeFiles)
+            {
+
+                var shapeFileName = Path.GetFileNameWithoutExtension(shapeFile) + "_Clipped.shp";
+                var outputPath = Path.Combine(this.OutputDirectoryTextBox.Text, shapeFileName);
+                var clipExtent = this.ClipExtentTextBox.Text;
+
+                var parameters = await QueuedTask.Run(() => 
+                {
+                    return Geoprocessing.MakeValueArray(shapeFile, clipExtent, outputPath);
+                });
+
+                await Geoprocessing.ExecuteToolAsync("analysis.Clip", parameters, null, cancelHandler.Progressor, GPExecuteToolFlags.None | GPExecuteToolFlags.GPThread);
+
+            }
+
+            progressDialog.Hide();
         }
 
-        private void OnSelectOutputDirectoryClick(object sender, RoutedEventArgs e)
+        private void OnSelectOutputDirectoryClicked(object sender, RoutedEventArgs e)
         {
-            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
-            dialog.IsFolderPicker = true;
+            var dialog = new CommonOpenFileDialog
+            {
+                IsFolderPicker = true
+            };
+
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
                 this.OutputDirectoryTextBox.Text = dialog.FileName;
             }
         }
 
-        private void OnSelectClipExtentClick(object sender, RoutedEventArgs e)
+        private void OnSelectClipExtentClicked(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog dialog = new OpenFileDialog();
-            dialog.DefaultExt = ".shp";
-            dialog.Filter = "Shape Files|*.shp";
+            var dialog = new OpenFileDialog
+            {
+                DefaultExt = ".shp", 
+                Filter = "Shape Files|*.shp"
+            };
+
             if (dialog.ShowDialog() == true)
             {
                 ClipExtentTextBox.Text = dialog.FileName;

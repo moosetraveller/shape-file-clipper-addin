@@ -18,17 +18,17 @@
     </controls:ProWindow.Resources>
     <Grid>
         <ListBox x:Name="SelectionList" HorizontalAlignment="Left" Height="79" Margin="10,41,0,0" VerticalAlignment="Top" Width="391" SelectionMode="Extended" />
-        <Button Content="Add File" HorizontalAlignment="Left" Height="23" Margin="406,41,0,0" VerticalAlignment="Top" Width="89" Click="OnAddFileClick"/>
-        <Button x:Name="RemoveFileButton" Content="Remove File" HorizontalAlignment="Left" Height="23" Margin="406,69,0,0" VerticalAlignment="Top" Width="89" Click="OnRemoveFileClick" IsEnabled="False"/>
-        <Button x:Name="ClearSelectionButton" Content="Clear Selection" HorizontalAlignment="Left" Height="23" Margin="406,97,0,0" VerticalAlignment="Top" Width="89" Click="OnClearSelectionClick" IsEnabled="False"/>
+        <Button Content="Add File" HorizontalAlignment="Left" Height="23" Margin="406,41,0,0" VerticalAlignment="Top" Width="89" Click="OnAddFileClicked"/>
+        <Button x:Name="RemoveFileButton" Content="Remove File" HorizontalAlignment="Left" Height="23" Margin="406,69,0,0" VerticalAlignment="Top" Width="89" Click="OnRemoveFileClicked" IsEnabled="False"/>
+        <Button x:Name="ClearSelectionButton" Content="Clear Selection" HorizontalAlignment="Left" Height="23" Margin="406,97,0,0" VerticalAlignment="Top" Width="89" Click="OnClearSelectionClicked" IsEnabled="False"/>
         <Label Content="Shape Files" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
         <Label Content="Clip Extent" HorizontalAlignment="Left" Margin="10,125,0,0" VerticalAlignment="Top" Width="160" FontWeight="Bold"/>
         <TextBox x:Name="ClipExtentTextBox" HorizontalAlignment="Left" Height="23" Margin="10,156,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="391" IsEnabled="False"/>
-        <Button Content="Select" HorizontalAlignment="Left" Height="23" Margin="406,156,0,0" VerticalAlignment="Top" Width="89" Click="OnSelectClipExtentClick"/>
+        <Button Content="Select" HorizontalAlignment="Left" Height="23" Margin="406,156,0,0" VerticalAlignment="Top" Width="89" Click="OnSelectClipExtentClicked"/>
         <Label Content="Output Directory" HorizontalAlignment="Left" Margin="10,184,0,0" VerticalAlignment="Top" Width="160" FontWeight="Bold"/>
         <TextBox x:Name="OutputDirectoryTextBox"  HorizontalAlignment="Left" Height="23" Margin="10,215,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="391" IsEnabled="False"/>
-        <Button Content="Select" HorizontalAlignment="Left" Height="23" Margin="406,215,0,0" VerticalAlignment="Top" Width="89" Click="OnSelectOutputDirectoryClick" RenderTransformOrigin="0.535,-0.015"/>
-        <Button x:Name="ExecuteButton" Content="Execute" HorizontalAlignment="Left" Height="22" Margin="406,268,0,0" VerticalAlignment="Top" Width="89" Click="OnExecuteClick" RenderTransformOrigin="0.535,-0.015" IsEnabled="False"/>
-        <Button Content="Close" HorizontalAlignment="Left" Height="22" Margin="312,268,0,0" VerticalAlignment="Top" Width="89" Click="OnCloseClick" RenderTransformOrigin="0.535,-0.015"/>
+        <Button Content="Select" HorizontalAlignment="Left" Height="23" Margin="406,215,0,0" VerticalAlignment="Top" Width="89" Click="OnSelectOutputDirectoryClicked" RenderTransformOrigin="0.535,-0.015"/>
+        <Button x:Name="ExecuteButton" Content="Run" HorizontalAlignment="Left" Height="22" Margin="406,268,0,0" VerticalAlignment="Top" Width="89" Click="OnExecuteClicked" RenderTransformOrigin="0.535,-0.015" IsEnabled="False"/>
+        <Button Content="Close" HorizontalAlignment="Left" Height="22" Margin="312,268,0,0" VerticalAlignment="Top" Width="89" Click="OnCloseClicked" RenderTransformOrigin="0.535,-0.015"/>
     </Grid>
 </controls:ProWindow>
