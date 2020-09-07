@@ -20,7 +20,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <ListBox x:Name="SelectionList" HorizontalAlignment="Left" Height="80" Margin="133,21,0,0" VerticalAlignment="Top" Width="391" SelectionMode="Extended" />
+        <ListBox x:Name="SelectionList" AllowDrop="True" HorizontalAlignment="Left" Height="80" Margin="133,21,0,0" VerticalAlignment="Top" Width="391" SelectionMode="Extended" />
         <Button Content="Add File" HorizontalAlignment="Left" Height="24" Margin="531,21,0,0" VerticalAlignment="Top" Width="89" Click="OnAddFileClicked"/>
         <Button x:Name="RemoveFileButton" Content="Remove File" HorizontalAlignment="Left" Height="24" Margin="531,49,0,0" VerticalAlignment="Top" Width="89" Click="OnRemoveFileClicked" IsEnabled="False"/>
         <Button x:Name="ClearSelectionButton" Content="Clear Selection" HorizontalAlignment="Left" Height="24" Margin="531,77,0,0" VerticalAlignment="Top" Width="89" Click="OnClearSelectionClicked" IsEnabled="False"/>

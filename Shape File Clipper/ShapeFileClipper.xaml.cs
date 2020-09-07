@@ -29,17 +29,21 @@ namespace Geomo.ShapeFileClipper
         {
             InitializeComponent();
 
-            this.InitSelectionList();
-            this.InitOverwriteModeComboBox();
-            //this.InitProjectionList();
+            InitSelectionList();
+            InitOverwriteModeComboBox();
+            //InitProjectionList();
 
-            this.SubscribeEventHandlers();
+            SubscribeEventHandlers();
         }
 
         private void InitSelectionList()
         {
-            this._selectedShapeFiles = new ObservableCollection<string>();
-            this.SelectionList.ItemsSource = this._selectedShapeFiles;
+            _selectedShapeFiles = new ObservableCollection<string>();
+            SelectionList.ItemsSource = _selectedShapeFiles;
+
+            SelectionList.Drop += OnSelectionListDragDrop;
+            SelectionList.DragEnter += OnSelectionListDragEnter;
+            SelectionList.DragOver += OnSelectionListDragOver;
         }
 
         /*
@@ -52,33 +56,32 @@ namespace Geomo.ShapeFileClipper
                     CoordinateSystemFilter.GeographicCoordinateSystem | CoordinateSystemFilter.ProjectedCoordinateSystem)
                     .Select(c => new CoordinateSystemListItem(c)));
             });
-            this.ProjectionComboBox.ItemsSource = this._projectionList;
+            ProjectionComboBox.ItemsSource = _projectionList;
         }
         */
 
         private void InitOverwriteModeComboBox()
         {
-            var defaultOverwriteMode =
-                new ComboBoxValue<OverwriteMode>(OverwriteMode.Overwrite, "Overwrite existing files");
-            this._overwriteModes = new ObservableCollection<ComboBoxValue<OverwriteMode>>()
+            var defaultOverwriteMode = new ComboBoxValue<OverwriteMode>(OverwriteMode.Overwrite, "Overwrite existing files");
+            _overwriteModes = new ObservableCollection<ComboBoxValue<OverwriteMode>>()
             {
                 defaultOverwriteMode,
                 new ComboBoxValue<OverwriteMode>(OverwriteMode.Backup, "Backup existing files"),
                 new ComboBoxValue<OverwriteMode>(OverwriteMode.Skip, "Skip existing files")
             };
-            this.OverwriteModeComboBox.SelectedItem = defaultOverwriteMode;
-            this.OverwriteModeComboBox.ItemsSource = this._overwriteModes;
+            OverwriteModeComboBox.SelectedItem = defaultOverwriteMode;
+            OverwriteModeComboBox.ItemsSource = _overwriteModes;
         }
 
         private void SubscribeEventHandlers()
         {
-            this.SelectionList.SelectionChanged += OnListBoxSelectionChanged;
+            SelectionList.SelectionChanged += OnListBoxSelectionChanged;
 
-            this._selectedShapeFiles.CollectionChanged += OnListBoxContentChanged;
-            this._selectedShapeFiles.CollectionChanged += OnInputChanged;
+            _selectedShapeFiles.CollectionChanged += OnListBoxContentChanged;
+            _selectedShapeFiles.CollectionChanged += OnInputChanged;
 
-            this.ClipExtentTextBox.SelectionChanged += OnInputChanged;
-            this.OutputDirectoryTextBox.SelectionChanged += OnInputChanged;
+            ClipExtentTextBox.SelectionChanged += OnInputChanged;
+            OutputDirectoryTextBox.SelectionChanged += OnInputChanged;
         }
 
         private void OnAddFileClicked(object sender, RoutedEventArgs routedEventArgs)
@@ -97,50 +100,77 @@ namespace Geomo.ShapeFileClipper
 
             foreach (var fileName in dialog.FileNames.Except(_selectedShapeFiles))
             {
-                this._selectedShapeFiles.Add(fileName);
+                _selectedShapeFiles.Add(fileName);
             }
         }
 
         private void OnInputChanged(object sender, EventArgs e)
         {
-            this.RunButton.IsEnabled = this._selectedShapeFiles.Count > 0
-                                           && !string.IsNullOrWhiteSpace(this.ClipExtentTextBox.Text)
-                                           && !string.IsNullOrWhiteSpace(this.OutputDirectoryTextBox.Text);
-            this.OpenOutputDirectoryButton.IsEnabled = !string.IsNullOrWhiteSpace(this.OutputDirectoryTextBox.Text);
+            RunButton.IsEnabled = _selectedShapeFiles.Count > 0
+                                           && !string.IsNullOrWhiteSpace(ClipExtentTextBox.Text)
+                                           && !string.IsNullOrWhiteSpace(OutputDirectoryTextBox.Text);
+            OpenOutputDirectoryButton.IsEnabled = !string.IsNullOrWhiteSpace(OutputDirectoryTextBox.Text);
         }
 
         private void OnListBoxContentChanged(object sender, EventArgs e)
         {
-            this.ClearSelectionButton.IsEnabled = this._selectedShapeFiles.Count > 0;
+            ClearSelectionButton.IsEnabled = _selectedShapeFiles.Count > 0;
+        }
+
+        private IEnumerable<string> GetShapeFilesFromDragEvent(DragEventArgs e)
+        {
+            return (e.Data.GetData(DataFormats.FileDrop) as string[]).Where(f => f.EndsWith(".shp"));
+        }
+
+        private void OnSelectionListDragEnter(object sender, DragEventArgs e)
+        {
+            var hasShapeFiles = e.Data.GetDataPresent(DataFormats.FileDrop) && GetShapeFilesFromDragEvent(e).Count() > 0;
+            e.Effects = hasShapeFiles ? DragDropEffects.All : DragDropEffects.None;
+        }
+
+        private void OnSelectionListDragOver(object sender, DragEventArgs e)
+        {
+            e.Handled = e.Data.GetDataPresent(DataFormats.FileDrop) && GetShapeFilesFromDragEvent(e).Count() > 0;
+        }
+
+        private void OnSelectionListDragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                foreach (var fileName in GetShapeFilesFromDragEvent(e).Except(_selectedShapeFiles))
+                {
+                    _selectedShapeFiles.Add(fileName);
+                }
+            }
         }
 
         private void OnListBoxSelectionChanged(object sender, EventArgs e)
         {
-            this.RemoveFileButton.IsEnabled = this.SelectionList.SelectedItems.Count > 0;
+            RemoveFileButton.IsEnabled = SelectionList.SelectedItems.Count > 0;
         }
 
         private void OnRemoveFileClicked(object sender, RoutedEventArgs e)
         {
-            var selection = (IList)this.SelectionList.SelectedItems;
+            var selection = (IList)SelectionList.SelectedItems;
             foreach (var selectedFile in new List<string>(selection.Cast<string>()))
             {
-                this._selectedShapeFiles.Remove(selectedFile);
+                _selectedShapeFiles.Remove(selectedFile);
             }
         }
 
         private void OnClearSelectionClicked(object sender, RoutedEventArgs e)
         {
-            this._selectedShapeFiles.Clear();
+            _selectedShapeFiles.Clear();
         }
 
         private void OnCloseClicked(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void OnOpenOutputDirectoryClicked(object sender, RoutedEventArgs e)
         {
-            Process.Start(this.OutputDirectoryTextBox.Text);
+            Process.Start(OutputDirectoryTextBox.Text);
         }
 
         private async void OnExecuteClicked(object sender, RoutedEventArgs e)
@@ -193,7 +223,7 @@ namespace Geomo.ShapeFileClipper
 
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                this.OutputDirectoryTextBox.Text = dialog.FileName;
+                OutputDirectoryTextBox.Text = dialog.FileName;
             }
 
         }
