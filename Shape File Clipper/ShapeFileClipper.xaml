@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="Shape File Clipper by Cartomo" Height="370.5" Width="645.756"
+        Title="Shape File Clipper by Cartomo" Height="390.5" Width="645.756"
         WindowStartupLocation="CenterOwner" ScrollViewer.VerticalScrollBarVisibility="Disabled" ShowMaxRestoreButton="False" ResizeMode="NoResize"
     >
     <controls:ProWindow.Resources>
@@ -31,10 +31,21 @@
         <Label Content="Output Directory" HorizontalAlignment="Left" Margin="15,160,0,0" VerticalAlignment="Top" Width="112" FontWeight="Bold"/>
         <TextBox x:Name="OutputDirectoryTextBox"  HorizontalAlignment="Left" Height="24" Margin="133,161,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="391" IsEnabled="False"/>
         <Button Content="Select" HorizontalAlignment="Left" Height="24" Margin="531,161,0,0" VerticalAlignment="Top" Width="89" Click="OnSelectOutputDirectoryClicked" RenderTransformOrigin="0.535,-0.015"/>
-        <Button x:Name="ExecuteButton" Content="Run" HorizontalAlignment="Left" Height="22" Margin="531,298,0,0" VerticalAlignment="Top" Width="89" Click="OnExecuteClicked" RenderTransformOrigin="0.535,-0.015" IsEnabled="False"/>
-        <Button Content="Close" HorizontalAlignment="Left" Height="22" Margin="437,298,0,0" VerticalAlignment="Top" Width="89" Click="OnCloseClicked" RenderTransformOrigin="0.535,-0.015"/>
+        <Button x:Name="RunButton" IsDefault="True" Content="Run" HorizontalAlignment="Left" Height="22" Margin="531,320,0,0" VerticalAlignment="Top" Width="89" Click="OnExecuteClicked" RenderTransformOrigin="0.535,-0.015" IsEnabled="False"/>
+        <Button Content="Close" IsCancel="True" HorizontalAlignment="Left" Height="22" Margin="437,320,0,0" VerticalAlignment="Top" Width="89" Click="OnCloseClicked" RenderTransformOrigin="0.535,-0.015"/>
         <Label Content="Postfix" HorizontalAlignment="Left" Margin="15,225,0,0" VerticalAlignment="Top" Width="112" FontWeight="Bold"/>
         <TextBox x:Name="PostfixTextBox"  HorizontalAlignment="Left" Height="24" Margin="133,226,0,0" TextWrapping="Wrap" Text="_Clipped" VerticalAlignment="Top" Width="391"/>
         <ComboBox x:Name="OverwriteModeComboBox" HorizontalAlignment="Left" Margin="133,190,0,0" VerticalAlignment="Top" Width="391"/>
+        <Button x:Name="OpenOutputDirectoryButton" Content="Open Output Directory" HorizontalAlignment="Left" Height="22" Margin="20,320,0,0" VerticalAlignment="Top" Width="160" Click="OnOpenOutputDirectoryClicked" IsEnabled="False" RenderTransformOrigin="0.535,-0.015"/>
+        <!--
+        <ComboBox x:Name="ProjectionComboBox" HorizontalAlignment="Left" Height="0" Margin="133,270,0,0" VerticalAlignment="Top" Width="391" IsTextSearchEnabled="False">
+            <ComboBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel />
+                </ItemsPanelTemplate>
+            </ComboBox.ItemsPanel>
+        </ComboBox>
+        <Label Content="Projection" HorizontalAlignment="Left" Margin="15,268,0,0" VerticalAlignment="Top" Width="112" FontWeight="Bold"/>
+        -->
     </Grid>
 </controls:ProWindow>

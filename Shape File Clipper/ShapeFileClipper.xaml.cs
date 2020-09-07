@@ -10,6 +10,9 @@ using ArcGIS.Desktop.Framework.Threading.Tasks;
 using Geomo.Util;
 using MessageBox = ArcGIS.Desktop.Framework.Dialogs.MessageBox;
 using Path = System.IO.Path;
+using ActiproSoftware.Windows.Extensions;
+using ArcGIS.Core.Geometry;
+using System.Diagnostics;
 
 namespace Geomo.ShapeFileClipper
 {
@@ -18,6 +21,7 @@ namespace Geomo.ShapeFileClipper
     /// </summary>
     public partial class ShapeFileClipper : ArcGIS.Desktop.Framework.Controls.ProWindow
     {
+        //private ObservableCollection<CoordinateSystemListItem> _projectionList;
         private ObservableCollection<string> _selectedShapeFiles;
         private ObservableCollection<ComboBoxValue<OverwriteMode>> _overwriteModes;
 
@@ -27,6 +31,7 @@ namespace Geomo.ShapeFileClipper
 
             this.InitSelectionList();
             this.InitOverwriteModeComboBox();
+            //this.InitProjectionList();
 
             this.SubscribeEventHandlers();
         }
@@ -37,9 +42,23 @@ namespace Geomo.ShapeFileClipper
             this.SelectionList.ItemsSource = this._selectedShapeFiles;
         }
 
+        /*
+        private async void InitProjectionList()
+        {
+            _projectionList = new ObservableCollection<CoordinateSystemListItem>();
+            await QueuedTask.Run(() =>
+            {
+                _projectionList.InsertRange(0, GeometryEngine.Instance.GetPredefinedCoordinateSystemList(
+                    CoordinateSystemFilter.GeographicCoordinateSystem | CoordinateSystemFilter.ProjectedCoordinateSystem)
+                    .Select(c => new CoordinateSystemListItem(c)));
+            });
+            this.ProjectionComboBox.ItemsSource = this._projectionList;
+        }
+        */
+
         private void InitOverwriteModeComboBox()
         {
-            var defaultOverwriteMode = 
+            var defaultOverwriteMode =
                 new ComboBoxValue<OverwriteMode>(OverwriteMode.Overwrite, "Overwrite existing files");
             this._overwriteModes = new ObservableCollection<ComboBoxValue<OverwriteMode>>()
             {
@@ -66,8 +85,8 @@ namespace Geomo.ShapeFileClipper
         {
             var dialog = new OpenFileDialog
             {
-                Multiselect = true, 
-                DefaultExt = ".shp", 
+                Multiselect = true,
+                DefaultExt = ".shp",
                 Filter = "Shape Files|*.shp"
             };
 
@@ -75,7 +94,7 @@ namespace Geomo.ShapeFileClipper
             {
                 return;
             }
-            
+
             foreach (var fileName in dialog.FileNames.Except(_selectedShapeFiles))
             {
                 this._selectedShapeFiles.Add(fileName);
@@ -84,9 +103,10 @@ namespace Geomo.ShapeFileClipper
 
         private void OnInputChanged(object sender, EventArgs e)
         {
-            this.ExecuteButton.IsEnabled = this._selectedShapeFiles.Count > 0
+            this.RunButton.IsEnabled = this._selectedShapeFiles.Count > 0
                                            && !string.IsNullOrWhiteSpace(this.ClipExtentTextBox.Text)
                                            && !string.IsNullOrWhiteSpace(this.OutputDirectoryTextBox.Text);
+            this.OpenOutputDirectoryButton.IsEnabled = !string.IsNullOrWhiteSpace(this.OutputDirectoryTextBox.Text);
         }
 
         private void OnListBoxContentChanged(object sender, EventArgs e)
@@ -101,7 +121,7 @@ namespace Geomo.ShapeFileClipper
 
         private void OnRemoveFileClicked(object sender, RoutedEventArgs e)
         {
-            var selection = (IList) this.SelectionList.SelectedItems;
+            var selection = (IList)this.SelectionList.SelectedItems;
             foreach (var selectedFile in new List<string>(selection.Cast<string>()))
             {
                 this._selectedShapeFiles.Remove(selectedFile);
@@ -116,6 +136,11 @@ namespace Geomo.ShapeFileClipper
         private void OnCloseClicked(object sender, RoutedEventArgs e)
         {
             this.Close();
+        }
+
+        private void OnOpenOutputDirectoryClicked(object sender, RoutedEventArgs e)
+        {
+            Process.Start(this.OutputDirectoryTextBox.Text);
         }
 
         private async void OnExecuteClicked(object sender, RoutedEventArgs e)
@@ -144,8 +169,6 @@ namespace Geomo.ShapeFileClipper
                 }
             }
 
-            progressDialog.Hide();
-
             if (ignoredShapeFiles.Count > 0)
             {
                 var message = string.Join("\n", ignoredShapeFiles);
@@ -155,6 +178,8 @@ namespace Geomo.ShapeFileClipper
             {
                 MessageBox.Show(this, "All shape files successfully clipped.", "Finished", MessageBoxButton.OK);
             }
+
+            progressDialog.Hide();
 
         }
 
@@ -178,7 +203,7 @@ namespace Geomo.ShapeFileClipper
 
             var dialog = new OpenFileDialog
             {
-                DefaultExt = ".shp", 
+                DefaultExt = ".shp",
                 Filter = "Shape Files|*.shp"
             };
 
