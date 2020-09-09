@@ -5,6 +5,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
+        xmlns:sfc="clr-namespace:Geomo.ShapeFileClipper;assembly=ShapeFileClipper"
         mc:Ignorable="d"
         Title="Reference System Selection" Height="500" Width="450"
         WindowStartupLocation="CenterOwner"
@@ -18,10 +19,15 @@
         </ResourceDictionary>
     </controls:ProWindow.Resources>
     <Grid>
-        <TreeView x:Name="CoordinateSystemTree" HorizontalAlignment="Left" Height="400" Margin="10,35,0,0" VerticalAlignment="Top" Width="424"
-            VirtualizingStackPanel.IsVirtualizing="True"
-            VirtualizingStackPanel.VirtualizationMode="Recycling">
+        <TreeView x:Name="CoordinateSystemTree" HorizontalAlignment="Left" Height="400" Margin="10,35,0,0" 
+                  VerticalAlignment="Top" Width="424">
 
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Children}">
+                    <TextBlock Text="{Binding Name}"/>
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+            
         </TreeView>
 
     </Grid>

@@ -1,24 +1,39 @@
 ﻿using ArcGIS.Core.Geometry;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace Geomo.ShapeFileClipper
 {
-    public class CoordinateSystemItem : TreeViewItem
+    public class CoordinateSystemItem : TreeNode
     {
 
-        public CoordinateSystemListEntry CoordinateSystem { get; private set; }
-
-        public CoordinateSystemItem(CoordinateSystemListEntry coordinateSystem)
+        private CoordinateSystemListEntry _coordinateSystem;
+        public CoordinateSystemListEntry CoordinateSystem
         {
-            CoordinateSystem = coordinateSystem;
-            Header = coordinateSystem.Name;
+            get
+            {
+                return _coordinateSystem;
+            }
+            set
+            {
+                _coordinateSystem = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(_coordinateSystem)));
+            }
         }
+
+        public List<TreeNode> Children => new List<TreeNode>(); // cannot have siblings
+
+        public string Name
+        {
+            get
+            {
+                return CoordinateSystem.Wkid + "\t" + CoordinateSystem.Name;
+            }
+        }
+
+        public CoordinateSystemItem() { }
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
     }
 }

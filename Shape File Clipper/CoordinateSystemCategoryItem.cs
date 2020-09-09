@@ -1,44 +1,46 @@
 ﻿using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace Geomo.ShapeFileClipper
 {
-    public class CoordinateSystemCategoryItem : TreeViewItem
+    public class CoordinateSystemCategoryItem : TreeNode
     {
-        public IEnumerable<CoordinateSystemItem> CoordinateSystems
+
+        public ObservableCollection<CoordinateSystemItem> Items { get; private set; }
+        public ObservableCollection<CoordinateSystemCategoryItem> Categories { get; private set; }
+
+        public List<TreeNode> Children => Categories.Select(i => (TreeNode)i).Concat(Items.Select(c => (TreeNode)c)).ToList();
+
+        private string _name;
+        public string Name
         {
-            get
+            get { return _name; }
+            set
             {
-                return Items.SourceCollection
-                    .OfType<object>()
-                    .Where(o => o.GetType() == typeof(CoordinateSystemItem))
-                    .OfType<CoordinateSystemItem>();
+                _name = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(_name)));
             }
         }
 
-        public IEnumerable<CoordinateSystemCategoryItem> Categories
+        public CoordinateSystemCategoryItem()
         {
-            get
+            Items = new ObservableCollection<CoordinateSystemItem>();
+            Categories = new ObservableCollection<CoordinateSystemCategoryItem>();
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public async static Task<List<TreeNode>> CreateTreeView(CoordinateSystemFilter filter)
+        {
+            var root = new CoordinateSystemCategoryItem()
             {
-                return Items.SourceCollection
-                    .OfType<object>()
-                    .Where(o => o.GetType() == typeof(CoordinateSystemCategoryItem))
-                    .OfType<CoordinateSystemCategoryItem>();
-            }
-        }
-
-        private CoordinateSystemCategoryItem(string header)
-        {
-            Header = header;
-        }
-
-        public async static Task<ItemCollection> CreateTreeView(CoordinateSystemFilter filter)
-        {
-            var root = new CoordinateSystemCategoryItem("root");
+                Name = "root"
+            };
             var coordinateSystems = await QueuedTask.Run(() =>
             {
                 return GeometryEngine.Instance.GetPredefinedCoordinateSystemList(filter);
@@ -47,7 +49,7 @@ namespace Geomo.ShapeFileClipper
             {
                 root.Add(coordinateSystem.Category.Split('/'), coordinateSystem);
             }
-            return root.Items;
+            return root.Children;
         }
 
         private void Add(string[] categories, CoordinateSystemListEntry coordinateSystem)
@@ -64,20 +66,26 @@ namespace Geomo.ShapeFileClipper
 
         private void AddItem(string[] categories, CoordinateSystemListEntry coordinateSystem)
         {
-            if (CoordinateSystems.Any(i => (string)i.Header == coordinateSystem.Name))
+            if (Items.Any(i => (string)i.CoordinateSystem.Name == coordinateSystem.Name))
             {
                 return; // already added
             }
-            Items.Add(new CoordinateSystemItem(coordinateSystem));
+            Items.Add(new CoordinateSystemItem()
+            { 
+                CoordinateSystem = coordinateSystem
+            });
         }
 
         private void AddCategory(string[] categories, CoordinateSystemListEntry coordinateSystem)
         {
-            var category = Categories.FirstOrDefault(i => (string)i.Header == categories[0]);
+            var category = Categories.FirstOrDefault(i => (string)i.Name == categories[0]);
             if (category == null)
             {
-                category = new CoordinateSystemCategoryItem(categories[0]);
-                Items.Add(category);
+                category = new CoordinateSystemCategoryItem()
+                {
+                    Name = categories[0]
+                };
+                Categories.Add(category);
             }
             category.Add(categories.Skip(1).ToArray(), coordinateSystem);
         }

@@ -23,7 +23,7 @@ namespace Geomo.ShapeFileClipper
     public partial class SelectReferenceSystem : ArcGIS.Desktop.Framework.Controls.ProWindow
     {
 
-        private ItemCollection _treeViewItems;
+        private List<TreeNode> _treeViewItems;
 
         public SelectReferenceSystem()
         {
