@@ -1,6 +1,8 @@
 ﻿using ArcGIS.Core.Geometry;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows.Data;
 
 namespace Geomo.ShapeFileClipper
 {
@@ -21,13 +23,13 @@ namespace Geomo.ShapeFileClipper
             }
         }
 
-        public List<TreeNode> Children => new List<TreeNode>(); // cannot have siblings
+        public ICollectionView Children => CollectionViewSource.GetDefaultView(new List<TreeNode>()); // cannot have siblings
 
         public string Name
         {
             get
             {
-                return CoordinateSystem.Wkid + "\t" + CoordinateSystem.Name;
+                return $"{CoordinateSystem.Name} [EPSG:{CoordinateSystem.Wkid}]";
             }
         }
 

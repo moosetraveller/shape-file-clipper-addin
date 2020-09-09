@@ -37,9 +37,9 @@
         <TextBox x:Name="PostfixTextBox"  HorizontalAlignment="Left" Height="24" Margin="133,226,0,0" TextWrapping="Wrap" Text="_Clipped" VerticalAlignment="Top" Width="391"/>
         <ComboBox x:Name="OverwriteModeComboBox" HorizontalAlignment="Left" Height="24  " Margin="133,190,0,0" VerticalAlignment="Top" Width="391"/>
         <Button x:Name="OpenOutputDirectoryButton" Content="Open Output Directory" HorizontalAlignment="Left" Height="24" Margin="20,320,0,0" VerticalAlignment="Top" Width="160" Click="OnOpenOutputDirectoryClicked" IsEnabled="False" RenderTransformOrigin="0.535,-0.015"/>
-        <!--
+    
         <Button Content="Select" HorizontalAlignment="Left" Height="24" Margin="531,265,0,0" VerticalAlignment="Top" Width="89" Click="OnSelectReferenceSystemClicked" RenderTransformOrigin="0.535,-0.015"/>
-        -->
+    
         <!--
         <ComboBox x:Name="ProjectionComboBox" HorizontalAlignment="Left" Height="0" Margin="133,270,0,0" VerticalAlignment="Top" Width="391" IsTextSearchEnabled="False">
             <ComboBox.ItemsPanel>

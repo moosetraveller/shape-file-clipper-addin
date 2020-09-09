@@ -1,19 +1,6 @@
 ﻿using ArcGIS.Core.Geometry;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Geomo.ShapeFileClipper
 {
@@ -23,7 +10,7 @@ namespace Geomo.ShapeFileClipper
     public partial class SelectReferenceSystem : ArcGIS.Desktop.Framework.Controls.ProWindow
     {
 
-        private List<TreeNode> _treeViewItems;
+        private ICollectionView _treeViewItems;
 
         public SelectReferenceSystem()
         {
@@ -33,7 +20,7 @@ namespace Geomo.ShapeFileClipper
 
         private async void InitCoordinateSystemTreeView()
         {
-            _treeViewItems = await CoordinateSystemCategoryItem.CreateTreeView(
+            _treeViewItems = await CoordinateSystemCategoryItem.CreateCoordinateSystemTreeView(
                 CoordinateSystemFilter.GeographicCoordinateSystem | CoordinateSystemFilter.ProjectedCoordinateSystem);
             CoordinateSystemTree.ItemsSource = _treeViewItems;
         }

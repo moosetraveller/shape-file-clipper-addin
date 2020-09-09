@@ -1,20 +1,41 @@
 ﻿using ArcGIS.Core.Geometry;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Data;
 
 namespace Geomo.ShapeFileClipper
 {
     public class CoordinateSystemCategoryItem : TreeNode
     {
 
-        public ObservableCollection<CoordinateSystemItem> Items { get; private set; }
-        public ObservableCollection<CoordinateSystemCategoryItem> Categories { get; private set; }
+        public IEnumerable<CoordinateSystemItem> Items
+        {
+            get
+            {
+                return Children.SourceCollection
+                    .OfType<TreeNode>()
+                    .Where(o => o.GetType() == typeof(CoordinateSystemItem))
+                    .OfType<CoordinateSystemItem>();
+            }
+        }
 
-        public List<TreeNode> Children => Categories.Select(i => (TreeNode)i).Concat(Items.Select(c => (TreeNode)c)).ToList();
+        public IEnumerable<CoordinateSystemCategoryItem> Categories
+        {
+            get
+            {
+                return Children.SourceCollection
+                    .OfType<TreeNode>()
+                    .Where(o => o.GetType() == typeof(CoordinateSystemCategoryItem))
+                    .OfType<CoordinateSystemCategoryItem>();
+            }
+        }
+        private ObservableCollection<TreeNode> _children;
+        public ICollectionView Children { get; private set; }
 
         private string _name;
         public string Name
@@ -27,15 +48,37 @@ namespace Geomo.ShapeFileClipper
             }
         }
 
+        private IComparer<TreeNode> _treeNodeComparer = new CoordinateSystemSorter();
+        public IComparer<TreeNode> TreeNodeComparer
+        {
+            get
+            {
+                return _treeNodeComparer;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    throw new NullReferenceException($"Property {nameof(TreeNodeComparer)} cannot be null.");
+                }
+                _treeNodeComparer = value;
+            }
+        }
+
         public CoordinateSystemCategoryItem()
         {
-            Items = new ObservableCollection<CoordinateSystemItem>();
-            Categories = new ObservableCollection<CoordinateSystemCategoryItem>();
+            _children = new ObservableCollection<TreeNode>();
+            Children = CollectionViewSource.GetDefaultView(_children);
+            // Children.SortDescriptions.Add(new SortDescription(nameof(Name), ListSortDirection.Ascending));
+            ((ListCollectionView)Children).CustomSort = new ForwardToDelegateComparer()
+            {
+                Delegate = (x, y) => TreeNodeComparer.Compare((TreeNode)x, (TreeNode)y)
+            };
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public async static Task<List<TreeNode>> CreateTreeView(CoordinateSystemFilter filter)
+        public async static Task<ICollectionView> CreateCoordinateSystemTreeView(CoordinateSystemFilter filter)
         {
             var root = new CoordinateSystemCategoryItem()
             {
@@ -49,7 +92,7 @@ namespace Geomo.ShapeFileClipper
             {
                 root.Add(coordinateSystem.Category.Split('/'), coordinateSystem);
             }
-            return root.Children;
+            return root.Children; // ignoring root node
         }
 
         private void Add(string[] categories, CoordinateSystemListEntry coordinateSystem)
@@ -70,8 +113,8 @@ namespace Geomo.ShapeFileClipper
             {
                 return; // already added
             }
-            Items.Add(new CoordinateSystemItem()
-            { 
+            _children.Add(new CoordinateSystemItem()
+            {
                 CoordinateSystem = coordinateSystem
             });
         }
@@ -85,7 +128,7 @@ namespace Geomo.ShapeFileClipper
                 {
                     Name = categories[0]
                 };
-                Categories.Add(category);
+                _children.Add(category);
             }
             category.Add(categories.Skip(1).ToArray(), coordinateSystem);
         }
