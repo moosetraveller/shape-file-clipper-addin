@@ -10,7 +10,6 @@ using ArcGIS.Desktop.Framework.Threading.Tasks;
 using Geomo.Util;
 using MessageBox = ArcGIS.Desktop.Framework.Dialogs.MessageBox;
 using Path = System.IO.Path;
-using ActiproSoftware.Windows.Extensions;
 using ArcGIS.Core.Geometry;
 using System.Diagnostics;
 
@@ -21,9 +20,10 @@ namespace Geomo.ShapeFileClipper
     /// </summary>
     public partial class ShapeFileClipper : ArcGIS.Desktop.Framework.Controls.ProWindow
     {
-        //private ObservableCollection<CoordinateSystemListItem> _projectionList;
         private ObservableCollection<string> _selectedShapeFiles;
         private ObservableCollection<ComboBoxValue<OverwriteMode>> _overwriteModes;
+
+        private SelectReferenceSystem selectReferenceSystemWindow;
 
         public ShapeFileClipper()
         {
@@ -31,7 +31,7 @@ namespace Geomo.ShapeFileClipper
 
             InitSelectionList();
             InitOverwriteModeComboBox();
-            //InitProjectionList();
+            InitSelectReferenceSystemWindow();
 
             SubscribeEventHandlers();
         }
@@ -46,19 +46,10 @@ namespace Geomo.ShapeFileClipper
             SelectionList.DragOver += OnSelectionListDragOver;
         }
 
-        /*
-        private async void InitProjectionList()
+        private void InitSelectReferenceSystemWindow()
         {
-            _projectionList = new ObservableCollection<CoordinateSystemListItem>();
-            await QueuedTask.Run(() =>
-            {
-                _projectionList.InsertRange(0, GeometryEngine.Instance.GetPredefinedCoordinateSystemList(
-                    CoordinateSystemFilter.GeographicCoordinateSystem | CoordinateSystemFilter.ProjectedCoordinateSystem)
-                    .Select(c => new CoordinateSystemListItem(c)));
-            });
-            ProjectionComboBox.ItemsSource = _projectionList;
+            selectReferenceSystemWindow = new SelectReferenceSystem();
         }
-        */
 
         private void InitOverwriteModeComboBox()
         {
@@ -82,6 +73,11 @@ namespace Geomo.ShapeFileClipper
 
             ClipExtentTextBox.SelectionChanged += OnInputChanged;
             OutputDirectoryTextBox.SelectionChanged += OnInputChanged;
+        }
+
+        private void OnSelectReferenceSystemClicked(object sender, RoutedEventArgs routedEventArgs)
+        {
+            selectReferenceSystemWindow.ShowDialog();
         }
 
         private void OnAddFileClicked(object sender, RoutedEventArgs routedEventArgs)

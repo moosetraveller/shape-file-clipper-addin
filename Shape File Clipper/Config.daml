@@ -27,9 +27,8 @@
       </groups>
       <controls>
         <button id="ShapeFileClipperButton" caption="Shape File Clipper" className="ShowShapeFileClipper" loadOnClick="true" smallImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GenericButtonPurple16.png" largeImage="pack://application:,,,/ArcGIS.Desktop.Resources;component/Images/GenericButtonPurple32.png">
-			<tooltip heading="Shape File Clipper">
-				Clips datasets to a desired study area and optionally re-projects the clipped datasets to a desired projection.<disabledText />
-			</tooltip>
+          <tooltip heading="Shape File Clipper">
+				Clips datasets to a desired study area and optionally re-projects the clipped datasets to a desired projection.<disabledText /></tooltip>
         </button>
       </controls>
     </insertModule>

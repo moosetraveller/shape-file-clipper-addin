@@ -26,17 +26,20 @@
         <Button x:Name="ClearSelectionButton" Content="Clear Selection" HorizontalAlignment="Left" Height="24" Margin="531,77,0,0" VerticalAlignment="Top" Width="89" Click="OnClearSelectionClicked" IsEnabled="False"/>
         <Label Content="Shape Files" HorizontalAlignment="Left" Margin="15,21,0,0" VerticalAlignment="Top" FontWeight="Bold" Width="112"/>
         <Label Content="Clip Extent" HorizontalAlignment="Left" Margin="15,118,0,0" VerticalAlignment="Top" Width="112" FontWeight="Bold" Height="28"/>
-        <TextBox x:Name="ClipExtentTextBox" HorizontalAlignment="Left" Height="22" Margin="133,121,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="391" IsEnabled="False"/>
-        <Button Content="Select" HorizontalAlignment="Left" Height="22" Margin="531,121,0,0" VerticalAlignment="Top" Width="89" Click="OnSelectClipExtentClicked"/>
+        <TextBox x:Name="ClipExtentTextBox" HorizontalAlignment="Left" Height="24" Margin="133,121,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="391" IsEnabled="False"/>
+        <Button Content="Select" HorizontalAlignment="Left" Height="24" Margin="531,121,0,0" VerticalAlignment="Top" Width="89" Click="OnSelectClipExtentClicked"/>
         <Label Content="Output Directory" HorizontalAlignment="Left" Margin="15,160,0,0" VerticalAlignment="Top" Width="112" FontWeight="Bold"/>
         <TextBox x:Name="OutputDirectoryTextBox"  HorizontalAlignment="Left" Height="24" Margin="133,161,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="391" IsEnabled="False"/>
         <Button Content="Select" HorizontalAlignment="Left" Height="24" Margin="531,161,0,0" VerticalAlignment="Top" Width="89" Click="OnSelectOutputDirectoryClicked" RenderTransformOrigin="0.535,-0.015"/>
-        <Button x:Name="RunButton" IsDefault="True" Content="Run" HorizontalAlignment="Left" Height="22" Margin="531,320,0,0" VerticalAlignment="Top" Width="89" Click="OnExecuteClicked" RenderTransformOrigin="0.535,-0.015" IsEnabled="False"/>
-        <Button Content="Close" IsCancel="True" HorizontalAlignment="Left" Height="22" Margin="437,320,0,0" VerticalAlignment="Top" Width="89" Click="OnCloseClicked" RenderTransformOrigin="0.535,-0.015"/>
+        <Button x:Name="RunButton" IsDefault="True" Content="Run" HorizontalAlignment="Left" Height="24" Margin="531,320,0,0" VerticalAlignment="Top" Width="89" Click="OnExecuteClicked" RenderTransformOrigin="0.535,-0.015" IsEnabled="False"/>
+        <Button Content="Close" IsCancel="True" HorizontalAlignment="Left" Height="24" Margin="437,320,0,0" VerticalAlignment="Top" Width="89" Click="OnCloseClicked" RenderTransformOrigin="0.535,-0.015"/>
         <Label Content="Postfix" HorizontalAlignment="Left" Margin="15,225,0,0" VerticalAlignment="Top" Width="112" FontWeight="Bold"/>
         <TextBox x:Name="PostfixTextBox"  HorizontalAlignment="Left" Height="24" Margin="133,226,0,0" TextWrapping="Wrap" Text="_Clipped" VerticalAlignment="Top" Width="391"/>
-        <ComboBox x:Name="OverwriteModeComboBox" HorizontalAlignment="Left" Margin="133,190,0,0" VerticalAlignment="Top" Width="391"/>
-        <Button x:Name="OpenOutputDirectoryButton" Content="Open Output Directory" HorizontalAlignment="Left" Height="22" Margin="20,320,0,0" VerticalAlignment="Top" Width="160" Click="OnOpenOutputDirectoryClicked" IsEnabled="False" RenderTransformOrigin="0.535,-0.015"/>
+        <ComboBox x:Name="OverwriteModeComboBox" HorizontalAlignment="Left" Height="24  " Margin="133,190,0,0" VerticalAlignment="Top" Width="391"/>
+        <Button x:Name="OpenOutputDirectoryButton" Content="Open Output Directory" HorizontalAlignment="Left" Height="24" Margin="20,320,0,0" VerticalAlignment="Top" Width="160" Click="OnOpenOutputDirectoryClicked" IsEnabled="False" RenderTransformOrigin="0.535,-0.015"/>
+        <!--
+        <Button Content="Select" HorizontalAlignment="Left" Height="24" Margin="531,265,0,0" VerticalAlignment="Top" Width="89" Click="OnSelectReferenceSystemClicked" RenderTransformOrigin="0.535,-0.015"/>
+        -->
         <!--
         <ComboBox x:Name="ProjectionComboBox" HorizontalAlignment="Left" Height="0" Margin="133,270,0,0" VerticalAlignment="Top" Width="391" IsTextSearchEnabled="False">
             <ComboBox.ItemsPanel>

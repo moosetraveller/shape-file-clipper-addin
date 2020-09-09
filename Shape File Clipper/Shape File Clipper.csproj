@@ -134,6 +134,12 @@
     <Compile Include="ComboBoxValue.cs" />
     <Compile Include="CoordinateSystemListItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="CoordinateSystemCategoryItem.cs" />
+    <Compile Include="CoordinateSystemItem.cs" />
+    <Compile Include="ReferenceSystemStructure.cs" />
+    <Compile Include="SelectReferenceSystem.xaml.cs">
+      <DependentUpon>SelectReferenceSystem.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ShapeFileClipper.xaml.cs">
       <DependentUpon>ShapeFileClipper.xaml</DependentUpon>
     </Compile>
@@ -141,6 +147,10 @@
     <Compile Include="ShowShapeFileClipper.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="SelectReferenceSystem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ShapeFileClipper.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
