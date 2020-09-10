@@ -19,7 +19,7 @@
         </ResourceDictionary>
     </controls:ProWindow.Resources>
     <Grid>
-        <TreeView x:Name="CoordinateSystemTree" HorizontalAlignment="Left" Height="400" Margin="10,35,0,0" 
+        <TreeView x:Name="CoordinateSystemTree" HorizontalAlignment="Left" Height="375" Margin="10,35,0,0" 
                   VerticalAlignment="Top" Width="424">
 
             <TreeView.ItemTemplate>
@@ -27,8 +27,19 @@
                     <TextBlock Text="{Binding Name}"/>
                 </HierarchicalDataTemplate>
             </TreeView.ItemTemplate>
-            
+
+            <!--<TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Style.Triggers>
+                        <Trigger Property="HasItems" Value="true">
+                            <Setter Property="Focusable" Value="False" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TreeView.ItemContainerStyle>-->
+
         </TreeView>
+        <Button Content="Select" HorizontalAlignment="Left" Height="25" Margin="329,425,0,0" VerticalAlignment="Top" Width="105" Click="Button_Click"/>
 
     </Grid>
 </controls:ProWindow>

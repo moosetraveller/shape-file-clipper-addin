@@ -6,11 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Geomo.ShapeFileClipper
+namespace Geomo.Util
 {
     public interface TreeNode : INotifyPropertyChanged
     {
-        String Name { get; }
+        string Name { get; }
 
         ICollectionView Children { get; }
     }

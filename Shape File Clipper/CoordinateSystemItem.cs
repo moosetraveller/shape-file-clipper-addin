@@ -1,41 +1,23 @@
 ﻿using ArcGIS.Core.Geometry;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Data;
+using Geomo.Util;
 
-namespace Geomo.ShapeFileClipper
+namespace Geomo.ArcGisExtension
 {
-    public class CoordinateSystemItem : TreeNode
+    public class CoordinateSystemItem : CoordinateSystemTreeNode
     {
-
-        private CoordinateSystemListEntry _coordinateSystem;
-        public CoordinateSystemListEntry CoordinateSystem
+        public override string Name
         {
             get
             {
-                return _coordinateSystem;
-            }
-            set
-            {
-                _coordinateSystem = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(_coordinateSystem)));
-            }
-        }
-
-        public ICollectionView Children => CollectionViewSource.GetDefaultView(new List<TreeNode>()); // cannot have siblings
-
-        public string Name
-        {
-            get
-            {
-                return $"{CoordinateSystem.Name} [EPSG:{CoordinateSystem.Wkid}]";
+                if (base.TryGetNodeObject(out CoordinateSystemListEntry cs))
+                {
+                    return $"{cs.Name} [EPSG:{cs.Wkid}]";
+                }
+                return null;
             }
         }
-
-        public CoordinateSystemItem() { }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
     }
 }

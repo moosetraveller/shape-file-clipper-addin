@@ -2,6 +2,8 @@
 using System.ComponentModel;
 using System.Windows;
 
+using Geomo.ArcGisExtension;
+
 namespace Geomo.ShapeFileClipper
 {
     /// <summary>
@@ -20,7 +22,7 @@ namespace Geomo.ShapeFileClipper
 
         private async void InitCoordinateSystemTreeView()
         {
-            _treeViewItems = await CoordinateSystemCategoryItem.CreateCoordinateSystemTreeView(
+            _treeViewItems = await CoordinateSystemTreeBuilder.Build(
                 CoordinateSystemFilter.GeographicCoordinateSystem | CoordinateSystemFilter.ProjectedCoordinateSystem);
             CoordinateSystemTree.ItemsSource = _treeViewItems;
         }
@@ -31,5 +33,9 @@ namespace Geomo.ShapeFileClipper
             this.Visibility = Visibility.Hidden;
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            // MessageBox.Show(((TreeNode)CoordinateSystemTree.SelectedItem).Name);
+        }
     }
 }

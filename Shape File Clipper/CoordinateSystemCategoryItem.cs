@@ -1,16 +1,12 @@
 ﻿using ArcGIS.Core.Geometry;
-using ArcGIS.Desktop.Framework.Threading.Tasks;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Data;
 
-namespace Geomo.ShapeFileClipper
+namespace Geomo.ArcGisExtension 
 {
-    public class CoordinateSystemCategoryItem : TreeNode
+    public class CoordinateSystemCategoryItem : CoordinateSystemTreeNode
     {
 
         public IEnumerable<CoordinateSystemItem> Items
@@ -18,7 +14,7 @@ namespace Geomo.ShapeFileClipper
             get
             {
                 return Children.SourceCollection
-                    .OfType<TreeNode>()
+                    .OfType<CoordinateSystemTreeNode>()
                     .Where(o => o.GetType() == typeof(CoordinateSystemItem))
                     .OfType<CoordinateSystemItem>();
             }
@@ -29,73 +25,22 @@ namespace Geomo.ShapeFileClipper
             get
             {
                 return Children.SourceCollection
-                    .OfType<TreeNode>()
+                    .OfType<CoordinateSystemTreeNode>()
                     .Where(o => o.GetType() == typeof(CoordinateSystemCategoryItem))
                     .OfType<CoordinateSystemCategoryItem>();
             }
         }
-        private ObservableCollection<TreeNode> _children;
-        public ICollectionView Children { get; private set; }
 
-        private string _name;
-        public string Name
-        {
-            get { return _name; }
-            set
-            {
-                _name = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(_name)));
-            }
-        }
-
-        private IComparer<TreeNode> _treeNodeComparer = new CoordinateSystemSorter();
-        public IComparer<TreeNode> TreeNodeComparer
-        {
-            get
-            {
-                return _treeNodeComparer;
-            }
-            set
-            {
-                if (value == null)
-                {
-                    throw new NullReferenceException($"Property {nameof(TreeNodeComparer)} cannot be null.");
-                }
-                _treeNodeComparer = value;
-            }
-        }
+        private ObservableCollection<CoordinateSystemTreeNode> _children;
 
         public CoordinateSystemCategoryItem()
         {
-            _children = new ObservableCollection<TreeNode>();
+            _children = new ObservableCollection<CoordinateSystemTreeNode>();
             Children = CollectionViewSource.GetDefaultView(_children);
-            // Children.SortDescriptions.Add(new SortDescription(nameof(Name), ListSortDirection.Ascending));
-            ((ListCollectionView)Children).CustomSort = new ForwardToDelegateComparer()
-            {
-                Delegate = (x, y) => TreeNodeComparer.Compare((TreeNode)x, (TreeNode)y)
-            };
+            ((ListCollectionView)Children).CustomSort = CoordinateSystemSorter.NonGenericComparer;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public async static Task<ICollectionView> CreateCoordinateSystemTreeView(CoordinateSystemFilter filter)
-        {
-            var root = new CoordinateSystemCategoryItem()
-            {
-                Name = "root"
-            };
-            var coordinateSystems = await QueuedTask.Run(() =>
-            {
-                return GeometryEngine.Instance.GetPredefinedCoordinateSystemList(filter);
-            });
-            foreach (var coordinateSystem in coordinateSystems)
-            {
-                root.Add(coordinateSystem.Category.Split('/'), coordinateSystem);
-            }
-            return root.Children; // ignoring root node
-        }
-
-        private void Add(string[] categories, CoordinateSystemListEntry coordinateSystem)
+        public void Add(string[] categories, CoordinateSystemListEntry coordinateSystem)
         {
             if (categories.Count() == 0)
             {
@@ -109,13 +54,18 @@ namespace Geomo.ShapeFileClipper
 
         private void AddItem(string[] categories, CoordinateSystemListEntry coordinateSystem)
         {
-            if (Items.Any(i => (string)i.CoordinateSystem.Name == coordinateSystem.Name))
+            if (Items.Any(i => {
+                if (i.TryGetNodeObject(out CoordinateSystemListEntry entry)) {
+                    return entry.Name == coordinateSystem.Name;
+                }
+                return false;
+            }))
             {
                 return; // already added
             }
             _children.Add(new CoordinateSystemItem()
             {
-                CoordinateSystem = coordinateSystem
+                NodeObject = coordinateSystem
             });
         }
 
@@ -126,7 +76,7 @@ namespace Geomo.ShapeFileClipper
             {
                 category = new CoordinateSystemCategoryItem()
                 {
-                    Name = categories[0]
+                    NodeObject = categories[0]
                 };
                 _children.Add(category);
             }

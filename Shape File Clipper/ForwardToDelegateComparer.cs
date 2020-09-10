@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Geomo.ShapeFileClipper
+namespace Geomo.Util
 {
 
     delegate int CompareDelegate(object x, object y);
 
     class ForwardToDelegateComparer : IComparer
     {
-        public CompareDelegate Delegate { get; set; }
+        public CompareDelegate Delegate { get; private set; }
+
+        public ForwardToDelegateComparer(CompareDelegate compareDelegate) {
+            Delegate = compareDelegate;
+        }
 
         public int Compare(object x, object y)
         {
