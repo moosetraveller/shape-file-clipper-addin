@@ -9,7 +9,7 @@ namespace Geomo.ArcGisExtension
     {
         public async static Task<ICollectionView> Build(CoordinateSystemFilter filter)
         {
-            var root = new CoordinateSystemCategoryItem()
+            var root = new CoordinateSystemCategory(null)
             {
                 NodeObject = "root"
             };

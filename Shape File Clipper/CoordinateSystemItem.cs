@@ -19,5 +19,7 @@ namespace Geomo.ArcGisExtension
                 return null;
             }
         }
+
+        public CoordinateSystemItem(CoordinateSystemCategory parent) : base(parent) { }
     }
 }

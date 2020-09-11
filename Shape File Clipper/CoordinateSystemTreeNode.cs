@@ -1,6 +1,9 @@
 ﻿using Geomo.Util;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
+using System.Security.Policy;
 using System.Windows.Data;
 
 namespace Geomo.ArcGisExtension
@@ -44,26 +47,57 @@ namespace Geomo.ArcGisExtension
 
         public ICollectionView Children { get; protected set; } = CollectionViewSource.GetDefaultView(new List<CoordinateSystemTreeNode>());
 
-        private string _filter;
-        public string Filter
+        private CoordinateSystemTreeNode _parent;
+        public CoordinateSystemTreeNode Parent
         {
-            get { return _filter; }
+            get
+            {
+                return _parent;
+            }
             set
             {
-                _filter = value;
-                foreach (CoordinateSystemTreeNode childNode in Children)
-                {
-                    childNode.Filter = Filter;
-                }
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Filter)));
+                var children = _parent?.Children as ListCollectionView;
+                children?.Remove(_parent);
+                _parent = value;
             }
         }
 
-        public void ResetFilter()
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public CoordinateSystemTreeNode(CoordinateSystemTreeNode parent)
         {
-            Filter = null;
+            Parent = parent;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public virtual bool IsNoFilter(string filter)
+        {
+            return filter == null || filter.Trim().Length == 0;
+        }
+
+        public virtual bool Matches(string filter)
+        {
+            return GetType() == typeof(CoordinateSystemItem) && Name.ToLower().Contains(filter.ToLower());
+        }
+
+        public virtual bool HasChildMatching(string filter)
+        {
+            if (IsNoFilter(filter))
+            {
+                return true;
+            }
+            foreach (CoordinateSystemTreeNode node in Children)
+            {
+                if (node.Matches(filter) || node.HasChildMatching(filter))
+                {
+                    return true;
+                }
+            }
+            return Matches(filter);
+        }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 }

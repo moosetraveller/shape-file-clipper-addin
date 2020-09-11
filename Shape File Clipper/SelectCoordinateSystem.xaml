@@ -1,4 +1,4 @@
-﻿<controls:ProWindow x:Name="SelectReferenceSystemWindow" x:Class="Geomo.ShapeFileClipper.SelectReferenceSystem"
+﻿<controls:ProWindow x:Name="SelectReferenceSystemWindow" x:Class="Geomo.ShapeFileClipper.SelectCoordinateSystem"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:controls="clr-namespace:ArcGIS.Desktop.Framework.Controls;assembly=ArcGIS.Desktop.Framework"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,7 +7,7 @@
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         xmlns:sfc="clr-namespace:Geomo.ShapeFileClipper;assembly=ShapeFileClipper"
         mc:Ignorable="d"
-        Title="Reference System Selection" Height="500" Width="450"
+        Title="Reference System Selection" Height="500" Width="500"
         WindowStartupLocation="CenterOwner"
         Closing="OnClosing" ResizeMode="NoResize" ShowMaxRestoreButton="False" ShowMinButton="False"
     >
@@ -19,8 +19,9 @@
         </ResourceDictionary>
     </controls:ProWindow.Resources>
     <Grid>
-        <TreeView x:Name="CoordinateSystemTree" HorizontalAlignment="Left" Height="375" Margin="10,35,0,0" 
-                  VerticalAlignment="Top" Width="424">
+        <TreeView x:Name="CoordinateSystemTree" HorizontalAlignment="Left" Height="393" Margin="10,38,0,0" 
+                  SelectedItemChanged="OnSelectedCoordinateSystemChanged"
+                  VerticalAlignment="Top" Width="474">
 
             <TreeView.ItemTemplate>
                 <HierarchicalDataTemplate ItemsSource="{Binding Children}">
@@ -39,7 +40,19 @@
             </TreeView.ItemContainerStyle>-->
 
         </TreeView>
-        <Button Content="Select" HorizontalAlignment="Left" Height="25" Margin="329,425,0,0" VerticalAlignment="Top" Width="105" Click="Button_Click"/>
+        <Button x:Name="SelectButton" Content="Select" HorizontalAlignment="Left" Height="26" Margin="379,436,0,0" VerticalAlignment="Top" Width="105" Click="OnSelect" 
+                IsEnabled="False" ToolTip="Select Coordinate System">
+        </Button>
+        <TextBox x:Name="SearchTextBox" HorizontalAlignment="Left" Height="23" Margin="280,10,0,0" TextWrapping="Wrap" 
+                 PreviewKeyDown="OnEnter"
+                 Text="" VerticalAlignment="Top" Width="142"/>
+        <Button x:Name="SearchButton" FontFamily="Segoe MDL2 Assets" Content="&#xE71C;" HorizontalAlignment="Left" Margin="427,10,0,0" 
+                VerticalAlignment="Top" Width="26" Height="23" Click="OnSearch" ToolTip="Filter Selection Tree"/>
+        <Button x:Name="ClearButton" FontFamily="Segoe MDL2 Assets" Content="&#xE894;" HorizontalAlignment="Left" Margin="458,10,0,0" 
+                VerticalAlignment="Top" Width="26" Height="23" Click="OnClear" ToolTip="Clear Filter"/>
+        <Label Content="Target Coordinate System" HorizontalAlignment="Left" Margin="10,12,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" Height="26" Margin="269,436,0,0" VerticalAlignment="Top" Width="105" 
+                Click="OnCancel" ToolTip="Cancel Selection"/>
 
     </Grid>
 </controls:ProWindow>

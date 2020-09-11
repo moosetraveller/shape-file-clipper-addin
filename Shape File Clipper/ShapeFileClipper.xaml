@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="Shape File Clipper by Cartomo" Height="390.5" Width="645.756"
+        Title="Shape File Clipper by Cartomo" Height="410.5" Width="645.756"
         WindowStartupLocation="CenterOwner" ScrollViewer.VerticalScrollBarVisibility="Disabled" ShowMaxRestoreButton="False" ResizeMode="NoResize"
     >
     <controls:ProWindow.Resources>
@@ -22,24 +22,27 @@
         </Grid.ColumnDefinitions>
         <ListBox x:Name="SelectionList" AllowDrop="True" HorizontalAlignment="Left" Height="80" Margin="133,21,0,0" VerticalAlignment="Top" Width="391" SelectionMode="Extended" />
         <Button Content="Add File" HorizontalAlignment="Left" Height="24" Margin="531,21,0,0" VerticalAlignment="Top" Width="89" Click="OnAddFileClicked"/>
-        <Button x:Name="RemoveFileButton" Content="Remove File" HorizontalAlignment="Left" Height="24" Margin="531,49,0,0" VerticalAlignment="Top" Width="89" Click="OnRemoveFileClicked" IsEnabled="False"/>
+        <Button x:Name="RemoveFileButton" Content="Remove File" HorizontalAlignment="Left" Height="24" Margin="531,49,0,0" VerticalAlignment="Top" Width="89" Click="OnRemoveFileClicked" IsEnabled="True"/>
         <Button x:Name="ClearSelectionButton" Content="Clear Selection" HorizontalAlignment="Left" Height="24" Margin="531,77,0,0" VerticalAlignment="Top" Width="89" Click="OnClearSelectionClicked" IsEnabled="False"/>
         <Label Content="Shape Files" HorizontalAlignment="Left" Margin="15,21,0,0" VerticalAlignment="Top" FontWeight="Bold" Width="112"/>
         <Label Content="Clip Extent" HorizontalAlignment="Left" Margin="15,118,0,0" VerticalAlignment="Top" Width="112" FontWeight="Bold" Height="28"/>
-        <TextBox x:Name="ClipExtentTextBox" HorizontalAlignment="Left" Height="24" Margin="133,121,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="391" IsEnabled="False"/>
+        <TextBox x:Name="ClipExtentTextBox" HorizontalAlignment="Left" Height="24" Margin="133,121,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="391" IsReadOnly="True"/>
         <Button Content="Select" HorizontalAlignment="Left" Height="24" Margin="531,121,0,0" VerticalAlignment="Top" Width="89" Click="OnSelectClipExtentClicked"/>
         <Label Content="Output Directory" HorizontalAlignment="Left" Margin="15,160,0,0" VerticalAlignment="Top" Width="112" FontWeight="Bold"/>
-        <TextBox x:Name="OutputDirectoryTextBox"  HorizontalAlignment="Left" Height="24" Margin="133,161,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="391" IsEnabled="False"/>
+        <TextBox x:Name="OutputDirectoryTextBox"  HorizontalAlignment="Left" Height="24" Margin="133,161,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="391" IsReadOnly="False"/>
         <Button Content="Select" HorizontalAlignment="Left" Height="24" Margin="531,161,0,0" VerticalAlignment="Top" Width="89" Click="OnSelectOutputDirectoryClicked" RenderTransformOrigin="0.535,-0.015"/>
-        <Button x:Name="RunButton" IsDefault="True" Content="Run" HorizontalAlignment="Left" Height="24" Margin="531,320,0,0" VerticalAlignment="Top" Width="89" Click="OnExecuteClicked" RenderTransformOrigin="0.535,-0.015" IsEnabled="False"/>
-        <Button Content="Close" IsCancel="True" HorizontalAlignment="Left" Height="24" Margin="437,320,0,0" VerticalAlignment="Top" Width="89" Click="OnCloseClicked" RenderTransformOrigin="0.535,-0.015"/>
-        <Label Content="Postfix" HorizontalAlignment="Left" Margin="15,225,0,0" VerticalAlignment="Top" Width="112" FontWeight="Bold"/>
+        <Button x:Name="RunButton" IsDefault="True" Content="Run" HorizontalAlignment="Left" Height="24" Margin="532,348,0,0" VerticalAlignment="Top" Width="89" Click="OnExecuteClicked" RenderTransformOrigin="0.535,-0.015" IsEnabled="False"/>
+        <Button Content="Close" IsCancel="True" HorizontalAlignment="Left" Height="24" Margin="438,348,0,0" VerticalAlignment="Top" Width="89" Click="OnCloseClicked" RenderTransformOrigin="0.535,-0.015"/>
+        <Label Content="Postfix" HorizontalAlignment="Left" Margin="15,224,0,0" VerticalAlignment="Top" Width="112" FontWeight="Bold"/>
         <TextBox x:Name="PostfixTextBox"  HorizontalAlignment="Left" Height="24" Margin="133,226,0,0" TextWrapping="Wrap" Text="_Clipped" VerticalAlignment="Top" Width="391"/>
         <ComboBox x:Name="OverwriteModeComboBox" HorizontalAlignment="Left" Height="24  " Margin="133,190,0,0" VerticalAlignment="Top" Width="391"/>
-        <Button x:Name="OpenOutputDirectoryButton" Content="Open Output Directory" HorizontalAlignment="Left" Height="24" Margin="20,320,0,0" VerticalAlignment="Top" Width="160" Click="OnOpenOutputDirectoryClicked" IsEnabled="False" RenderTransformOrigin="0.535,-0.015"/>
-    
-        <Button Content="Select" HorizontalAlignment="Left" Height="24" Margin="531,265,0,0" VerticalAlignment="Top" Width="89" Click="OnSelectReferenceSystemClicked" RenderTransformOrigin="0.535,-0.015"/>
-    
+        <Button x:Name="OpenOutputDirectoryButton" Content="Open Output Directory" HorizontalAlignment="Left" Height="24" Margin="21,348,0,0" VerticalAlignment="Top" Width="160" Click="OnOpenOutputDirectoryClicked" IsEnabled="False" RenderTransformOrigin="0.535,-0.015"/>
+
+        <Button Content="Select" HorizontalAlignment="Left" Height="24" Margin="531,299,0,0" VerticalAlignment="Top" Width="89" Click="OnSelectReferenceSystemClicked" RenderTransformOrigin="0.535,-0.015"/>
+        <TextBox x:Name="CoordinateSystemTextBox"  HorizontalAlignment="Left" Height="24" Margin="133,299,0,0" TextWrapping="Wrap" Text="" IsReadOnly="True" VerticalAlignment="Top" Width="391"/>
+        <Label Content="Coordinate System" HorizontalAlignment="Left" Margin="15,297,0,0" VerticalAlignment="Top" Width="118" FontWeight="Bold"/>
+        <Label Content="Not yet implemented:" HorizontalAlignment="Left" Margin="15,273,0,0" VerticalAlignment="Top" Width="180" FontWeight="Bold" Foreground="#FFC31E1E"/>
+
         <!--
         <ComboBox x:Name="ProjectionComboBox" HorizontalAlignment="Left" Height="0" Margin="133,270,0,0" VerticalAlignment="Top" Width="391" IsTextSearchEnabled="False">
             <ComboBox.ItemsPanel>

@@ -12,6 +12,7 @@ using MessageBox = ArcGIS.Desktop.Framework.Dialogs.MessageBox;
 using Path = System.IO.Path;
 using ArcGIS.Core.Geometry;
 using System.Diagnostics;
+using Geomo.ArcGisExtension;
 
 namespace Geomo.ShapeFileClipper
 {
@@ -22,8 +23,9 @@ namespace Geomo.ShapeFileClipper
     {
         private ObservableCollection<string> _selectedShapeFiles;
         private ObservableCollection<ComboBoxValue<OverwriteMode>> _overwriteModes;
+        private CoordinateSystemItem _selectedCoordinateSystem;
 
-        private SelectReferenceSystem selectReferenceSystemWindow;
+        private SelectCoordinateSystem selectReferenceSystemWindow;
 
         public ShapeFileClipper()
         {
@@ -48,7 +50,14 @@ namespace Geomo.ShapeFileClipper
 
         private void InitSelectReferenceSystemWindow()
         {
-            selectReferenceSystemWindow = new SelectReferenceSystem();
+            selectReferenceSystemWindow = new SelectCoordinateSystem();
+            selectReferenceSystemWindow.CoordinateSystemChanged += OnCoordinateSystemChanged;
+        }
+
+        private void OnCoordinateSystemChanged(object source, CoordinateSystemWindowEventArgs args)
+        {
+            _selectedCoordinateSystem = args.CoordinateSystem;
+            CoordinateSystemTextBox.Text = _selectedCoordinateSystem.Name;
         }
 
         private void InitOverwriteModeComboBox()
