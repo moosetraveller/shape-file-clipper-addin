@@ -54,26 +54,12 @@ namespace Geomo.ArcGisExtension
         public CoordinateSystemCategory(CoordinateSystemCategory parent) : base(parent)
         {
             _children = new ObservableCollection<CoordinateSystemTreeNode>();
-            
+
             Children = CollectionViewSource.GetDefaultView(_children);
 
             ((ListCollectionView)Children).CustomSort = CoordinateSystemComparer.NonGeneric;
-            ((ListCollectionView)Children).Filter = (o) =>
-            {
-                if (o is CoordinateSystemTreeNode node)
-                {
-                    if (node.Parent == null)
-                    {
-                        return true;
-                    }
-                    if (IsNoFilter(Filter))
-                    {
-                        return true;
-                    }
-                    return node.Matches(Filter) || node.HasChildMatching(Filter);
-                }
-                return false;
-            };
+            ((ListCollectionView)Children).Filter = (o) => o is CoordinateSystemTreeNode node && 
+                            (node.Parent == null || IsNoFilter(Filter) || node.Matches(Filter) || node.HasChildMatching(Filter));
         }
 
         public void ResetFilter()
@@ -95,14 +81,7 @@ namespace Geomo.ArcGisExtension
 
         private void AddItem(CoordinateSystemListEntry coordinateSystem)
         {
-            if (Items.Any(i =>
-            {
-                if (i.TryGetNodeObject(out CoordinateSystemListEntry entry))
-                {
-                    return entry.Name == coordinateSystem.Name;
-                }
-                return false;
-            }))
+            if (Items.Any(i => i.NodeObject is CoordinateSystemListEntry entry && entry.Name == coordinateSystem.Name))
             {
                 return; // already added
             }

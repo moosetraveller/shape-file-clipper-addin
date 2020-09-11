@@ -132,13 +132,13 @@
   <ItemGroup>
     <Compile Include="ClipController.cs" />
     <Compile Include="ComboBoxValue.cs" />
-    <Compile Include="CoordinateSystemComparer.cs" />
+    <Compile Include="CoordinateSystemTreeComparer.cs" />
     <Compile Include="CoordinateSystemTreeBuilder.cs" />
     <Compile Include="CoordinateSystemTreeNode.cs" />
     <Compile Include="ForwardToDelegateComparer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CoordinateSystemCategory.cs" />
-    <Compile Include="CoordinateSystemItem.cs" />
+    <Compile Include="CoordinateSystemTreeCategory.cs" />
+    <Compile Include="CoordinateSystemTreeItem.cs" />
     <Compile Include="SelectCoordinateSystem.xaml.cs">
       <DependentUpon>SelectCoordinateSystem.xaml</DependentUpon>
     </Compile>

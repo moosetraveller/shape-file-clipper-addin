@@ -12,7 +12,7 @@ namespace Geomo.ArcGisExtension
         {
             get
             {
-                if (base.TryGetNodeObject(out CoordinateSystemListEntry cs))
+                if (base.NodeObject is CoordinateSystemListEntry cs)
                 {
                     return $"{cs.Name} [EPSG:{cs.Wkid}]";
                 }

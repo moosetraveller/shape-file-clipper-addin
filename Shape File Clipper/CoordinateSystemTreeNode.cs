@@ -1,9 +1,6 @@
 ﻿using Geomo.Util;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Security.Policy;
 using System.Windows.Data;
 
 namespace Geomo.ArcGisExtension
@@ -17,24 +14,12 @@ namespace Geomo.ArcGisExtension
         private object _nodeObject;
         public object NodeObject
         {
-            // use TryGetNodeObject<T> instead
-            private get { return _nodeObject; }
+            get { return _nodeObject; }
             set
             {
                 _nodeObject = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(NodeObject)));
             }
-        }
-
-        public bool TryGetNodeObject<T>(out T nodeObject)
-        {
-            if (NodeObject.GetType() == typeof(T))
-            {
-                nodeObject = (T)NodeObject;
-                return true;
-            }
-            nodeObject = default;
-            return false;
         }
 
         public virtual string Name
