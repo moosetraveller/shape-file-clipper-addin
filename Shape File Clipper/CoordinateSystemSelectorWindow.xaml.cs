@@ -1,30 +1,23 @@
 ﻿using ArcGIS.Core.Geometry;
 using System.ComponentModel;
 using System.Windows;
-
 using Geomo.ArcGisExtension;
-using System;
 using System.Windows.Input;
 
 namespace Geomo.ShapeFileClipper
 {
-    public class CoordinateSystemWindowEventArgs : EventArgs
-    {
-        public CoordinateSystemItem CoordinateSystem { get; set; }
-    }
 
     /// <summary>
     /// Interaction logic for SelectReferenceSystemWindow.xaml
     /// </summary>
-    public partial class SelectCoordinateSystem : ArcGIS.Desktop.Framework.Controls.ProWindow
+    public partial class CoordinateSystemSelectionWindow : ArcGIS.Desktop.Framework.Controls.ProWindow, ICoordinateSystemSelectionWindow
     {
-
         private ICollectionView _treeViewItems;
 
-        public delegate void CoordinateSystemWindowEventHandler(object source, CoordinateSystemWindowEventArgs args);
-        public event CoordinateSystemWindowEventHandler CoordinateSystemChanged;
+        public event ICoordinateSystemSelectionWindow.CoordinateSystemSelectorWindowEventHandler CoordinateSystemChanged;
+        public CoordinateSystemSelection Selection { get; private set; }
 
-        public SelectCoordinateSystem()
+        public CoordinateSystemSelectionWindow()
         {
             InitializeComponent();
             InitCoordinateSystemTreeView();
@@ -45,9 +38,15 @@ namespace Geomo.ShapeFileClipper
 
         private void OnSelect(object sender, RoutedEventArgs e)
         {
-            CoordinateSystemChanged?.Invoke(this, new CoordinateSystemWindowEventArgs()
+            var _spatialReference = (CoordinateSystemListEntry)((CoordinateSystemItem)CoordinateSystemTree?.SelectedItem)?.NodeObject;
+            CoordinateSystemChanged?.Invoke(this, new CoordinateSystemSelectorWindowEventArgs()
             {
-                CoordinateSystem = (CoordinateSystemItem)CoordinateSystemTree.SelectedItem
+                Selection = new CoordinateSystemSelection()
+                {
+                    Wkid = _spatialReference?.Wkid,
+                    Name = _spatialReference?.Name,
+                    SpatialReference = _spatialReference
+                }
             });
             Close();
         }
@@ -63,7 +62,7 @@ namespace Geomo.ShapeFileClipper
             SearchTextBox.Text = "";
             foreach (var node in _treeViewItems)
             {
-                ((CoordinateSystemCategory)node).ResetFilter();
+                (node as CoordinateSystemCategory)?.ClearFilter();
             }
             OnSelectedCoordinateSystemChanged(this, new RoutedPropertyChangedEventArgs<object>(selectedNode, CoordinateSystemTree.SelectedItem));
         }

@@ -9,23 +9,22 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using Geomo.Util;
 using MessageBox = ArcGIS.Desktop.Framework.Dialogs.MessageBox;
-using Path = System.IO.Path;
-using ArcGIS.Core.Geometry;
 using System.Diagnostics;
 using Geomo.ArcGisExtension;
+using ArcGIS.Desktop.Framework.Controls;
 
 namespace Geomo.ShapeFileClipper
 {
     /// <summary>
     /// Interaction logic for ShapeFileClipper.xaml
     /// </summary>
-    public partial class ShapeFileClipper : ArcGIS.Desktop.Framework.Controls.ProWindow
+    public partial class ShapeFileClipper : ProWindow
     {
         private ObservableCollection<string> _selectedShapeFiles;
         private ObservableCollection<ComboBoxValue<OverwriteMode>> _overwriteModes;
-        private CoordinateSystemItem _selectedCoordinateSystem;
+        private object _selectedCoordinateSystem;
 
-        private SelectCoordinateSystem selectReferenceSystemWindow;
+        private ICoordinateSystemSelectionWindow _selectCoordinateSystemWindow;
 
         public ShapeFileClipper()
         {
@@ -50,14 +49,16 @@ namespace Geomo.ShapeFileClipper
 
         private void InitSelectReferenceSystemWindow()
         {
-            selectReferenceSystemWindow = new SelectCoordinateSystem();
-            selectReferenceSystemWindow.CoordinateSystemChanged += OnCoordinateSystemChanged;
+            //_selectCoordinateSystemWindow = new CoordinateSystemSelectionWindow();
+            _selectCoordinateSystemWindow = new ArcCoordinateSystemSelectionWindow();
+            _selectCoordinateSystemWindow.CoordinateSystemChanged += OnCoordinateSystemChanged;
         }
 
-        private void OnCoordinateSystemChanged(object source, CoordinateSystemWindowEventArgs args)
+        private void OnCoordinateSystemChanged(object source, CoordinateSystemSelectorWindowEventArgs e)
         {
-            _selectedCoordinateSystem = args.CoordinateSystem;
-            CoordinateSystemTextBox.Text = _selectedCoordinateSystem.Name;
+            _selectedCoordinateSystem = e.Selection;
+            CoordinateSystemTextBox.Text = _selectedCoordinateSystem.ToString();
+            OnInputChanged(source, EventArgs.Empty);
         }
 
         private void InitOverwriteModeComboBox()
@@ -86,7 +87,7 @@ namespace Geomo.ShapeFileClipper
 
         private void OnSelectReferenceSystemClicked(object sender, RoutedEventArgs routedEventArgs)
         {
-            selectReferenceSystemWindow.ShowDialog();
+            _selectCoordinateSystemWindow.ShowDialog();
         }
 
         private void OnAddFileClicked(object sender, RoutedEventArgs routedEventArgs)
@@ -113,7 +114,8 @@ namespace Geomo.ShapeFileClipper
         {
             RunButton.IsEnabled = _selectedShapeFiles.Count > 0
                                            && !string.IsNullOrWhiteSpace(ClipExtentTextBox.Text)
-                                           && !string.IsNullOrWhiteSpace(OutputDirectoryTextBox.Text);
+                                           && !string.IsNullOrWhiteSpace(OutputDirectoryTextBox.Text)
+                                           && (!(DoProjectCheckBox.IsChecked ?? true) || _selectedCoordinateSystem != null) ;
             OpenOutputDirectoryButton.IsEnabled = !string.IsNullOrWhiteSpace(OutputDirectoryTextBox.Text);
         }
 
@@ -156,7 +158,7 @@ namespace Geomo.ShapeFileClipper
 
         private void OnRemoveFileClicked(object sender, RoutedEventArgs e)
         {
-            var selection = (IList)SelectionList.SelectedItems;
+            var selection = SelectionList.SelectedItems;
             foreach (var selectedFile in new List<string>(selection.Cast<string>()))
             {
                 _selectedShapeFiles.Remove(selectedFile);
@@ -247,6 +249,25 @@ namespace Geomo.ShapeFileClipper
                 ClipExtentTextBox.Text = dialog.FileName;
             }
 
+        }
+
+        private void HandleDoProjectCheckBoxState(bool isChecked)
+        {
+            CoordinateSystemLabel.IsEnabled = isChecked;
+            SelectCoordinateSystemButton.IsEnabled = isChecked;
+            CoordinateSystemTextBox.IsEnabled = isChecked;
+            CoordinateSystemLabel.FontWeight = isChecked ? FontWeights.Bold : FontWeights.Normal;
+            OnInputChanged(this, EventArgs.Empty);
+        }
+
+        private void DoProjectCheckBox_Checked(object sender, RoutedEventArgs e)
+        {
+            HandleDoProjectCheckBoxState(true);
+        }
+
+        private void DoProjectCheckBox_Unchecked(object sender, RoutedEventArgs e)
+        {
+            HandleDoProjectCheckBoxState(false);
         }
     }
 }

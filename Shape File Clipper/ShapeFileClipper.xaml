@@ -20,28 +20,29 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <ListBox x:Name="SelectionList" AllowDrop="True" HorizontalAlignment="Left" Height="80" Margin="133,21,0,0" VerticalAlignment="Top" Width="391" SelectionMode="Extended" />
-        <Button Content="Add File" HorizontalAlignment="Left" Height="24" Margin="531,21,0,0" VerticalAlignment="Top" Width="89" Click="OnAddFileClicked"/>
-        <Button x:Name="RemoveFileButton" Content="Remove File" HorizontalAlignment="Left" Height="24" Margin="531,49,0,0" VerticalAlignment="Top" Width="89" Click="OnRemoveFileClicked" IsEnabled="True"/>
-        <Button x:Name="ClearSelectionButton" Content="Clear Selection" HorizontalAlignment="Left" Height="24" Margin="531,77,0,0" VerticalAlignment="Top" Width="89" Click="OnClearSelectionClicked" IsEnabled="False"/>
-        <Label Content="Shape Files" HorizontalAlignment="Left" Margin="15,21,0,0" VerticalAlignment="Top" FontWeight="Bold" Width="112"/>
-        <Label Content="Clip Extent" HorizontalAlignment="Left" Margin="15,118,0,0" VerticalAlignment="Top" Width="112" FontWeight="Bold" Height="28"/>
-        <TextBox x:Name="ClipExtentTextBox" HorizontalAlignment="Left" Height="24" Margin="133,121,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="391" IsReadOnly="True"/>
-        <Button Content="Select" HorizontalAlignment="Left" Height="24" Margin="531,121,0,0" VerticalAlignment="Top" Width="89" Click="OnSelectClipExtentClicked"/>
-        <Label Content="Output Directory" HorizontalAlignment="Left" Margin="15,160,0,0" VerticalAlignment="Top" Width="112" FontWeight="Bold"/>
-        <TextBox x:Name="OutputDirectoryTextBox"  HorizontalAlignment="Left" Height="24" Margin="133,161,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="391" IsReadOnly="False"/>
-        <Button Content="Select" HorizontalAlignment="Left" Height="24" Margin="531,161,0,0" VerticalAlignment="Top" Width="89" Click="OnSelectOutputDirectoryClicked" RenderTransformOrigin="0.535,-0.015"/>
-        <Button x:Name="RunButton" IsDefault="True" Content="Run" HorizontalAlignment="Left" Height="24" Margin="532,348,0,0" VerticalAlignment="Top" Width="89" Click="OnExecuteClicked" RenderTransformOrigin="0.535,-0.015" IsEnabled="False"/>
-        <Button Content="Close" IsCancel="True" HorizontalAlignment="Left" Height="24" Margin="438,348,0,0" VerticalAlignment="Top" Width="89" Click="OnCloseClicked" RenderTransformOrigin="0.535,-0.015"/>
-        <Label Content="Postfix" HorizontalAlignment="Left" Margin="15,224,0,0" VerticalAlignment="Top" Width="112" FontWeight="Bold"/>
-        <TextBox x:Name="PostfixTextBox"  HorizontalAlignment="Left" Height="24" Margin="133,226,0,0" TextWrapping="Wrap" Text="_Clipped" VerticalAlignment="Top" Width="391"/>
-        <ComboBox x:Name="OverwriteModeComboBox" HorizontalAlignment="Left" Height="24  " Margin="133,190,0,0" VerticalAlignment="Top" Width="391"/>
-        <Button x:Name="OpenOutputDirectoryButton" Content="Open Output Directory" HorizontalAlignment="Left" Height="24" Margin="21,348,0,0" VerticalAlignment="Top" Width="160" Click="OnOpenOutputDirectoryClicked" IsEnabled="False" RenderTransformOrigin="0.535,-0.015"/>
+        <ListBox ItemContainerStyle="{DynamicResource Esri_ListBoxItemHighlightBrush}" x:Name="SelectionList" AllowDrop="True" HorizontalAlignment="Left" Height="82" Margin="154,10,0,0" VerticalAlignment="Top" Width="401" SelectionMode="Extended" />
+        <Button Style="{DynamicResource Esri_Button}" FontFamily="Segoe MDL2 Assets" Content="&#xecc8;"  HorizontalAlignment="Left" Height="24" Margin="560,10,0,0" VerticalAlignment="Top" Width="24" Click="OnAddFileClicked"/>
+        <Button Style="{DynamicResource Esri_Button}" x:Name="RemoveFileButton" FontFamily="Segoe MDL2 Assets" Content="&#xecc9;" HorizontalAlignment="Left" Height="24" Margin="560,39,0,0" VerticalAlignment="Top" Width="69" Click="OnRemoveFileClicked" IsEnabled="False"/>
+        <Button Style="{DynamicResource Esri_Button}" x:Name="ClearSelectionButton" FontFamily="Segoe MDL2 Assets" Content="&#xe8e6;" HorizontalAlignment="Left" Height="24" Margin="560,68,0,0" VerticalAlignment="Top" Width="69" Click="OnClearSelectionClicked" IsEnabled="False"/>
+        <Label Content="Shape Files" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontWeight="Bold" Width="139" RenderTransformOrigin="0.504,0.154"/>
+        <Label Content="Clip Extent" HorizontalAlignment="Left" Margin="10,106,0,0" VerticalAlignment="Top" Width="139" FontWeight="Bold" Height="24"/>
+        <TextBox x:Name="ClipExtentTextBox" HorizontalAlignment="Left" Height="24" Margin="154,106,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="401" IsReadOnly="True"/>
+        <Button Style="{DynamicResource Esri_Button}" FontFamily="Segoe MDL2 Assets" Content="&#xec51;" HorizontalAlignment="Left" Height="24" Margin="560,106,0,0" VerticalAlignment="Top" Width="69" Click="OnSelectClipExtentClicked"/>
+        <Label Content="Output Directory" HorizontalAlignment="Left" Margin="10,142,0,0" VerticalAlignment="Top" Width="139" FontWeight="Bold" Height="24"/>
+        <TextBox x:Name="OutputDirectoryTextBox"  HorizontalAlignment="Left" Height="24" Margin="154,142,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="401" IsReadOnly="True"/>
+        <Button Style="{DynamicResource Esri_Button}" FontFamily="Segoe MDL2 Assets" Content="&#xec51;" HorizontalAlignment="Left" Height="24" Margin="560,142,0,0" VerticalAlignment="Top" Width="69" Click="OnSelectOutputDirectoryClicked" RenderTransformOrigin="0.535,-0.015"/>
+        <Button Style="{DynamicResource Esri_Button}" x:Name="RunButton" IsDefault="True" Content="Run" HorizontalAlignment="Left" Height="24" Margin="541,348,0,0" VerticalAlignment="Top" Width="89" Click="OnExecuteClicked" RenderTransformOrigin="0.535,-0.015" IsEnabled="False" FontWeight="Bold"/>
+        <Button Style="{DynamicResource Esri_Button}" Content="Close" IsCancel="True" HorizontalAlignment="Left" Height="24" Margin="447,348,0,0" VerticalAlignment="Top" Width="89" Click="OnCloseClicked" RenderTransformOrigin="0.535,-0.015"/>
+        <Label Content="Postfix" HorizontalAlignment="Left" Margin="10,210,0,0" VerticalAlignment="Top" Width="139" Height="24"/>
+        <TextBox x:Name="PostfixTextBox"  HorizontalAlignment="Left" Height="24" Margin="154,210,0,0" TextWrapping="Wrap" Text="_Clipped" VerticalAlignment="Top" Width="401"/>
+        <ComboBox x:Name="OverwriteModeComboBox" HorizontalAlignment="Left" Height="24  " Margin="154,171,0,0" VerticalAlignment="Top" Width="401"/>
+        <Button Style="{DynamicResource Esri_Button}" x:Name="OpenOutputDirectoryButton" Content="Open Output Directory" HorizontalAlignment="Left" Height="24" Margin="10,348,0,0" VerticalAlignment="Top" Width="160" Click="OnOpenOutputDirectoryClicked" IsEnabled="False" RenderTransformOrigin="0.535,-0.015"/>
 
-        <Button Content="Select" HorizontalAlignment="Left" Height="24" Margin="531,299,0,0" VerticalAlignment="Top" Width="89" Click="OnSelectReferenceSystemClicked" RenderTransformOrigin="0.535,-0.015"/>
-        <TextBox x:Name="CoordinateSystemTextBox"  HorizontalAlignment="Left" Height="24" Margin="133,299,0,0" TextWrapping="Wrap" Text="" IsReadOnly="True" VerticalAlignment="Top" Width="391"/>
-        <Label Content="Coordinate System" HorizontalAlignment="Left" Margin="15,297,0,0" VerticalAlignment="Top" Width="118" FontWeight="Bold"/>
-        <Label Content="Not yet implemented:" HorizontalAlignment="Left" Margin="15,273,0,0" VerticalAlignment="Top" Width="180" FontWeight="Bold" Foreground="#FFC31E1E"/>
+        <Button Style="{DynamicResource Esri_Button}" x:Name="SelectCoordinateSystemButton" FontFamily="Segoe MDL2 Assets" Content="&#xe909;" IsEnabled="False" HorizontalAlignment="Left" Height="24" Margin="560,280,0,0" VerticalAlignment="Top" Width="70" Click="OnSelectReferenceSystemClicked" RenderTransformOrigin="0.535,-0.015"/>
+        <TextBox x:Name="CoordinateSystemTextBox"  HorizontalAlignment="Left" Height="24" IsEnabled="False" Margin="154,280,0,0" TextWrapping="Wrap" Text="" IsReadOnly="True" VerticalAlignment="Top" Width="401"/>
+        <Label x:Name="CoordinateSystemLabel" Content="Coordinate System" Height="24" HorizontalAlignment="Left" IsEnabled="False" Margin="10,280,0,0" VerticalAlignment="Top" Width="118"/>
+        <CheckBox Style="{DynamicResource Esri_CheckboxToggleSwitch}" x:Name="DoProjectCheckBox" Content="Project Result" HorizontalAlignment="Left" Margin="14,251,0,0" VerticalAlignment="Top"
+                  Checked="DoProjectCheckBox_Checked" Unchecked="DoProjectCheckBox_Unchecked"  Width="226" Height="24"/>
 
         <!--
         <ComboBox x:Name="ProjectionComboBox" HorizontalAlignment="Left" Height="0" Margin="133,270,0,0" VerticalAlignment="Top" Width="391" IsTextSearchEnabled="False">

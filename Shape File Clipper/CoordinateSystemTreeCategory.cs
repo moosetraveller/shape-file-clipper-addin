@@ -62,7 +62,7 @@ namespace Geomo.ArcGisExtension
                             (node.Parent == null || IsNoFilter(Filter) || node.Matches(Filter) || node.HasChildMatching(Filter));
         }
 
-        public void ResetFilter()
+        public void ClearFilter()
         {
             Filter = null;
         }
