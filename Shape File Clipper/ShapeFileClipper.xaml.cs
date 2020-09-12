@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
-using Microsoft.Win32;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using MessageBox = ArcGIS.Desktop.Framework.Dialogs.MessageBox;
 using System.Diagnostics;
 using ArcGIS.Desktop.Catalog;
 using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Framework.Controls;
-using ArcGIS.Desktop.Internal.Core.BrowseFilter;
-using ESRI.ArcGIS.ItemIndex;
 using Geomo.ShapeFileClipper.Utils;
 using Geomo.ShapeFileClipper.CustomCoordinateSystemTree;
 using Geomo.ShapeFileClipper.GeoProcessing;
@@ -27,7 +23,8 @@ namespace Geomo.ShapeFileClipper
 
         private ICoordinateSystemSelectionWindow _selectCoordinateSystemWindow;
 
-        private BrowseProjectFilter _browseFilter;
+        private BrowseProjectFilter _featureClassBrowseFilter;
+        private BrowseProjectFilter _workspaceBrowseFilter;
 
         private ObservableCollection<string> _selectedShapeFiles;
         private ObservableCollection<ComboBoxValue<OverwriteMode>> _overwriteModes;
@@ -49,9 +46,13 @@ namespace Geomo.ShapeFileClipper
         private void InitBrowseFilter()
         {
             // C:\Program Files\ArcGIS\Pro\Resources\SearchResources\Schema
-            _browseFilter = new BrowseProjectFilter("esri_browseDialogFilters_featureClasses_all")
+            _featureClassBrowseFilter = new BrowseProjectFilter("esri_browseDialogFilters_featureClasses_all")
             {
-                Name = "Feature Classes"
+                Name = "Shapefiles/Feature Classes"
+            };
+            _workspaceBrowseFilter = new BrowseProjectFilter("esri_browseDialogFilters_workspaces_all")
+            {
+                Name = "Folders/Datasets"
             };
         }
 
@@ -115,7 +116,7 @@ namespace Geomo.ShapeFileClipper
             {
                 Title = "Add Feature Classes",
                 MultiSelect = true,
-                BrowseFilter = _browseFilter
+                BrowseFilter = _featureClassBrowseFilter
             };
 
             if (dialog.ShowDialog() != true)
@@ -249,7 +250,7 @@ namespace Geomo.ShapeFileClipper
             var dialog = new OpenItemDialog()
             {
                 Title = "Select Output Location",
-                Filter = ItemFilters.folders
+                BrowseFilter = _workspaceBrowseFilter
             };
 
             if (dialog.ShowDialog() == true)
@@ -265,7 +266,10 @@ namespace Geomo.ShapeFileClipper
         {
 
             //var dialog = new OpenFileDialog { DefaultExt = ".shp",  Filter = "Shape Files|*.shp" };
-            var dialog = new OpenItemDialog();
+            var dialog = new OpenItemDialog()
+            {
+                BrowseFilter = _featureClassBrowseFilter
+            };
 
             if (dialog.ShowDialog() == true)
             {
