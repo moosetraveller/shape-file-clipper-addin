@@ -6,12 +6,16 @@ using System.Windows;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
-using Geomo.Util;
 using MessageBox = ArcGIS.Desktop.Framework.Dialogs.MessageBox;
 using System.Diagnostics;
+using ArcGIS.Desktop.Catalog;
+using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Framework.Controls;
+using ArcGIS.Desktop.Internal.Core.BrowseFilter;
+using ESRI.ArcGIS.ItemIndex;
 using Geomo.ShapeFileClipper.Utils;
 using Geomo.ShapeFileClipper.CustomCoordinateSystemTree;
+using Geomo.ShapeFileClipper.GeoProcessing;
 
 namespace Geomo.ShapeFileClipper
 {
@@ -22,6 +26,8 @@ namespace Geomo.ShapeFileClipper
     {
 
         private ICoordinateSystemSelectionWindow _selectCoordinateSystemWindow;
+
+        private BrowseProjectFilter _browseFilter;
 
         private ObservableCollection<string> _selectedShapeFiles;
         private ObservableCollection<ComboBoxValue<OverwriteMode>> _overwriteModes;
@@ -35,7 +41,18 @@ namespace Geomo.ShapeFileClipper
             InitOverwriteModeComboBox();
             InitSelectReferenceSystemWindow();
 
+            InitBrowseFilter();
+
             SubscribeEventHandlers();
+        }
+
+        private void InitBrowseFilter()
+        {
+            // C:\Program Files\ArcGIS\Pro\Resources\SearchResources\Schema
+            _browseFilter = new BrowseProjectFilter("esri_browseDialogFilters_featureClasses_all")
+            {
+                Name = "Feature Classes"
+            };
         }
 
         private void InitSelectionList()
@@ -93,11 +110,12 @@ namespace Geomo.ShapeFileClipper
 
         private void OnAddFileClicked(object sender, RoutedEventArgs routedEventArgs)
         {
-            var dialog = new OpenFileDialog
+            //var dialog = new OpenFileDialog { Multiselect = true, DefaultExt = ".shp", Filter = "Shape Files|*.shp" };
+            var dialog = new OpenItemDialog()
             {
-                Multiselect = true,
-                DefaultExt = ".shp",
-                Filter = "Shape Files|*.shp"
+                Title = "Add Feature Classes",
+                MultiSelect = true,
+                BrowseFilter = _browseFilter
             };
 
             if (dialog.ShowDialog() != true)
@@ -105,7 +123,10 @@ namespace Geomo.ShapeFileClipper
                 return;
             }
 
-            foreach (var fileName in dialog.FileNames.Except(_selectedShapeFiles))
+            //foreach (var fileName in dialog.FileNames.Except(_selectedShapeFiles)) { _selectedShapeFiles.Add(fileName); }
+            foreach (var fileName in dialog.Items
+                .Select(i => i.Path)
+                .Except(_selectedShapeFiles))
             {
                 _selectedShapeFiles.Add(fileName);
             }
@@ -127,18 +148,18 @@ namespace Geomo.ShapeFileClipper
 
         private IEnumerable<string> GetShapeFilesFromDragEvent(DragEventArgs e)
         {
-            return (e.Data.GetData(DataFormats.FileDrop) as string[]).Where(f => f.EndsWith(".shp"));
+            return (e.Data.GetData(DataFormats.FileDrop) as string[])?.Where(f => f.EndsWith(".shp")) ?? new string[0];
         }
 
         private void OnSelectionListDragEnter(object sender, DragEventArgs e)
         {
-            var hasShapeFiles = e.Data.GetDataPresent(DataFormats.FileDrop) && GetShapeFilesFromDragEvent(e).Count() > 0;
+            var hasShapeFiles = e.Data.GetDataPresent(DataFormats.FileDrop) && GetShapeFilesFromDragEvent(e).Any();
             e.Effects = hasShapeFiles ? DragDropEffects.All : DragDropEffects.None;
         }
 
         private void OnSelectionListDragOver(object sender, DragEventArgs e)
         {
-            e.Handled = e.Data.GetDataPresent(DataFormats.FileDrop) && GetShapeFilesFromDragEvent(e).Count() > 0;
+            e.Handled = e.Data.GetDataPresent(DataFormats.FileDrop) && GetShapeFilesFromDragEvent(e).Any();
         }
 
         private void OnSelectionListDragDrop(object sender, DragEventArgs e)
@@ -196,7 +217,7 @@ namespace Geomo.ShapeFileClipper
             var overwriteMode = ((ComboBoxValue<OverwriteMode>)OverwriteModeComboBox.SelectedItem).Value;
             var cancelHandler = new CancelableProgressorSource(progressDialog);
 
-            var clipController = new ClipController(clipExtentShapeFile, outputDirectory, postfix, backupFolderName, overwriteMode, cancelHandler);
+            var clipController = new ClipTool(clipExtentShapeFile, outputDirectory, postfix, backupFolderName, overwriteMode, cancelHandler);
 
             foreach (var shapeFile in _selectedShapeFiles)
             {
@@ -224,14 +245,18 @@ namespace Geomo.ShapeFileClipper
         private void OnSelectOutputDirectoryClicked(object sender, RoutedEventArgs e)
         {
 
-            var dialog = new CommonOpenFileDialog
+            //var dialog = new CommonOpenFileDialog { IsFolderPicker = true };
+            var dialog = new OpenItemDialog()
             {
-                IsFolderPicker = true
+                Title = "Select Output Location",
+                Filter = ItemFilters.folders
             };
 
-            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            if (dialog.ShowDialog() == true)
             {
-                OutputDirectoryTextBox.Text = dialog.FileName;
+                OutputDirectoryTextBox.Text = dialog.Items
+                    .Select(i => i.Path)
+                    .FirstOrDefault() ?? "";
             }
 
         }
@@ -239,15 +264,14 @@ namespace Geomo.ShapeFileClipper
         private void OnSelectClipExtentClicked(object sender, RoutedEventArgs e)
         {
 
-            var dialog = new OpenFileDialog
-            {
-                DefaultExt = ".shp",
-                Filter = "Shape Files|*.shp"
-            };
+            //var dialog = new OpenFileDialog { DefaultExt = ".shp",  Filter = "Shape Files|*.shp" };
+            var dialog = new OpenItemDialog();
 
             if (dialog.ShowDialog() == true)
             {
-                ClipExtentTextBox.Text = dialog.FileName;
+                ClipExtentTextBox.Text = dialog.Items
+                    .Select(i => i.Path)
+                    .FirstOrDefault() ?? "";
             }
 
         }

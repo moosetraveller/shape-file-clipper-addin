@@ -133,8 +133,8 @@
     <Compile Include="ArcCoordinateSystemSelectionWindow.xaml.cs">
       <DependentUpon>ArcCoordinateSystemSelectionWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ClipController.cs" />
-    <Compile Include="GeoProcessing\Clip.cs" />
+    <Compile Include="GeoProcessing\ClipTool.cs" />
+    <Compile Include="GeoProcessing\OverwriteMode.cs" />
     <Compile Include="Utils\ComboBoxValue.cs" />
     <Compile Include="CustomCoordinateSystemTree\CoordinateSystemTreeComparer.cs" />
     <Compile Include="CustomCoordinateSystemTree\CoordinateSystemTreeBuilder.cs" />

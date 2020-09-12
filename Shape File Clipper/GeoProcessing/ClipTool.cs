@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Threading.Tasks;
 using ArcGIS.Desktop.Core.Geoprocessing;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 
-namespace Geomo.Util
+namespace Geomo.ShapeFileClipper.GeoProcessing
 {
-    enum OverwriteMode
-    {
-        Overwrite, Backup, Skip
-    }
-
-    class ClipController
+    class ClipTool
     {
         private readonly string _clipExtentShapeFile;
         private readonly string _outputDirectory;
@@ -23,7 +14,7 @@ namespace Geomo.Util
         private readonly OverwriteMode _overwriteMode;
         private readonly CancelableProgressorSource _cancelHandler;
 
-        public ClipController(string clipExtentShapeFile, string outputDirectory, string postfix, string backupFolderName,
+        public ClipTool(string clipExtentShapeFile, string outputDirectory, string postfix, string backupFolderName,
             OverwriteMode overwriteMode, CancelableProgressorSource cancelHandler)
         {
             this._clipExtentShapeFile = clipExtentShapeFile;
