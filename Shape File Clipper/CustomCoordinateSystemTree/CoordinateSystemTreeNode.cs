@@ -1,15 +1,15 @@
-﻿using Geomo.Util;
+﻿using Geomo.ShapeFileClipper.Utils;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Data;
 
-namespace Geomo.ArcGisExtension
+namespace Geomo.ShapeFileClipper.CustomCoordinateSystemTree
 {
     /// <summary>
     /// Represents either a category or a coordinate system. CoordinateSystemTreeNode is purposely 
     /// non-generic to allow different types of node objects.
     /// </summary>
-    public abstract class CoordinateSystemTreeNode : TreeNode
+    public abstract class CoordinateSystemTreeNode : ITreeNode
     {
         private object _nodeObject;
         public object NodeObject

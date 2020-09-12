@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -10,8 +9,9 @@ using ArcGIS.Desktop.Framework.Threading.Tasks;
 using Geomo.Util;
 using MessageBox = ArcGIS.Desktop.Framework.Dialogs.MessageBox;
 using System.Diagnostics;
-using Geomo.ArcGisExtension;
 using ArcGIS.Desktop.Framework.Controls;
+using Geomo.ShapeFileClipper.Utils;
+using Geomo.ShapeFileClipper.CustomCoordinateSystemTree;
 
 namespace Geomo.ShapeFileClipper
 {
@@ -20,11 +20,12 @@ namespace Geomo.ShapeFileClipper
     /// </summary>
     public partial class ShapeFileClipper : ProWindow
     {
+
+        private ICoordinateSystemSelectionWindow _selectCoordinateSystemWindow;
+
         private ObservableCollection<string> _selectedShapeFiles;
         private ObservableCollection<ComboBoxValue<OverwriteMode>> _overwriteModes;
         private object _selectedCoordinateSystem;
-
-        private ICoordinateSystemSelectionWindow _selectCoordinateSystemWindow;
 
         public ShapeFileClipper()
         {

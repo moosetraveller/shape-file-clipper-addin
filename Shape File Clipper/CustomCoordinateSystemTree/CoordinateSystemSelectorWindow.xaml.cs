@@ -1,10 +1,9 @@
 ﻿using ArcGIS.Core.Geometry;
 using System.ComponentModel;
 using System.Windows;
-using Geomo.ArcGisExtension;
 using System.Windows.Input;
 
-namespace Geomo.ShapeFileClipper
+namespace Geomo.ShapeFileClipper.CustomCoordinateSystemTree
 {
 
     /// <summary>

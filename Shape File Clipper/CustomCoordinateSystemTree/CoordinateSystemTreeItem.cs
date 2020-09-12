@@ -1,11 +1,7 @@
 ﻿using ArcGIS.Core.Geometry;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Windows.Data;
-using Geomo.Util;
 
-namespace Geomo.ArcGisExtension
-{
+namespace Geomo.ShapeFileClipper.CustomCoordinateSystemTree
+{ 
     public class CoordinateSystemItem : CoordinateSystemTreeNode
     {
         public override string Name

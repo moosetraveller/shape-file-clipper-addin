@@ -1,6 +1,6 @@
 ﻿
 
-namespace Geomo.Util
+namespace Geomo.ShapeFileClipper.Utils
 {
     class ComboBoxValue<T>
     {

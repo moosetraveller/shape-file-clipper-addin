@@ -3,7 +3,7 @@ using ArcGIS.Desktop.Framework.Threading.Tasks;
 using System.ComponentModel;
 using System.Threading.Tasks;
 
-namespace Geomo.ArcGisExtension
+namespace Geomo.ShapeFileClipper.CustomCoordinateSystemTree
 {
     class CoordinateSystemTreeBuilder
     {

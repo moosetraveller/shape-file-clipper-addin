@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections;
 
-namespace Geomo.Util
+namespace Geomo.ShapeFileClipper.Utils
 {
-
     delegate int CompareDelegate(object x, object y);
 
     class ForwardToDelegateComparer : IComparer

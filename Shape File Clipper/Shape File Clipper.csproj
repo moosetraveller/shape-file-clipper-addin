@@ -134,32 +134,32 @@
       <DependentUpon>ArcCoordinateSystemSelectionWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ClipController.cs" />
-    <Compile Include="ComboBoxValue.cs" />
-    <Compile Include="CoordinateSystemTreeComparer.cs" />
-    <Compile Include="CoordinateSystemTreeBuilder.cs" />
-    <Compile Include="CoordinateSystemTreeNode.cs" />
-    <Compile Include="ForwardToDelegateComparer.cs" />
+    <Compile Include="GeoProcessing\Clip.cs" />
+    <Compile Include="Utils\ComboBoxValue.cs" />
+    <Compile Include="CustomCoordinateSystemTree\CoordinateSystemTreeComparer.cs" />
+    <Compile Include="CustomCoordinateSystemTree\CoordinateSystemTreeBuilder.cs" />
+    <Compile Include="CustomCoordinateSystemTree\CoordinateSystemTreeNode.cs" />
+    <Compile Include="Utils\ForwardToDelegateComparer.cs" />
     <Compile Include="ICoordinateSystemSelectionWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="CoordinateSystemTreeCategory.cs" />
-    <Compile Include="CoordinateSystemTreeItem.cs" />
-    <Compile Include="CoordinateSystemSelectorWindow.xaml.cs">
+    <Compile Include="CustomCoordinateSystemTree\CoordinateSystemTreeCategory.cs" />
+    <Compile Include="CustomCoordinateSystemTree\CoordinateSystemTreeItem.cs" />
+    <Compile Include="CustomCoordinateSystemTree\CoordinateSystemSelectorWindow.xaml.cs">
       <DependentUpon>CoordinateSystemSelectorWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="ShapeFileClipper.xaml.cs">
       <DependentUpon>ShapeFileClipper.xaml</DependentUpon>
     </Compile>
     <Compile Include="ShapeFileClipperModule.cs" />
-    <Compile Include="ShowArcCoordinateSystemSelectionWindow.cs" />
     <Compile Include="ShowShapeFileClipper.cs" />
-    <Compile Include="TreeNode.cs" />
+    <Compile Include="Utils\ITreeNode.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="ArcCoordinateSystemSelectionWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="CoordinateSystemSelectorWindow.xaml">
+    <Page Include="CustomCoordinateSystemTree\CoordinateSystemSelectorWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -173,8 +173,10 @@
       <Link>.editorconfig</Link>
     </None>
     <None Include="App.config" />
+    <None Include="CustomCoordinateSystemTree\Readme.md" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!--
   PackageAction can be:

@@ -42,7 +42,7 @@
         <TextBox x:Name="CoordinateSystemTextBox"  HorizontalAlignment="Left" Height="24" IsEnabled="False" Margin="154,280,0,0" TextWrapping="Wrap" Text="" IsReadOnly="True" VerticalAlignment="Top" Width="401"/>
         <Label x:Name="CoordinateSystemLabel" Content="Coordinate System" Height="24" HorizontalAlignment="Left" IsEnabled="False" Margin="10,280,0,0" VerticalAlignment="Top" Width="118"/>
         <CheckBox Style="{DynamicResource Esri_CheckboxToggleSwitch}" x:Name="DoProjectCheckBox" Content="Project Result" HorizontalAlignment="Left" Margin="14,251,0,0" VerticalAlignment="Top"
-                  Checked="DoProjectCheckBox_Checked" Unchecked="DoProjectCheckBox_Unchecked"  Width="226" Height="24"/>
+                  Checked="DoProjectCheckBox_Checked" Unchecked="DoProjectCheckBox_Unchecked"  Width="236" Height="24"/>
 
         <!--
         <ComboBox x:Name="ProjectionComboBox" HorizontalAlignment="Left" Height="0" Margin="133,270,0,0" VerticalAlignment="Top" Width="391" IsTextSearchEnabled="False">

@@ -1,13 +1,10 @@
 ﻿using ArcGIS.Core.Geometry;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using System.Diagnostics;
 using System.Linq;
 using System.Windows.Data;
 
-namespace Geomo.ArcGisExtension
+namespace Geomo.ShapeFileClipper.CustomCoordinateSystemTree
 {
     public class CoordinateSystemCategory : CoordinateSystemTreeNode
     {
