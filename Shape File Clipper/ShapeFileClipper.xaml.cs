@@ -25,6 +25,7 @@ namespace Geomo.ShapeFileClipper
 
         private BrowseProjectFilter _featureClassBrowseFilter;
         private BrowseProjectFilter _workspaceBrowseFilter;
+        private BrowseProjectFilter _shapeFileBrowseFilter;
 
         private ObservableCollection<string> _selectedShapeFiles;
         private ObservableCollection<ComboBoxValue<OverwriteMode>> _overwriteModes;
@@ -45,14 +46,19 @@ namespace Geomo.ShapeFileClipper
 
         private void InitBrowseFilter()
         {
-            // C:\Program Files\ArcGIS\Pro\Resources\SearchResources\Schema
+            // C:\Program Files\ArcGIS\Pro\Resources\SearchResources\Schema\BrowseFilters.xml
             _featureClassBrowseFilter = new BrowseProjectFilter("esri_browseDialogFilters_featureClasses_all")
             {
-                Name = "Shapefiles/Feature Classes"
+                Name = "Shape Files/Feature Classes"
             };
-            _workspaceBrowseFilter = new BrowseProjectFilter("esri_browseDialogFilters_workspaces_all")
+            // use "esri_browseDialogFilters_workspaces_all" to include geodatabase locations
+            _workspaceBrowseFilter = new BrowseProjectFilter("esri_browseDialogFilters_folders") 
             {
                 Name = "Folders/Datasets"
+            };
+            _shapeFileBrowseFilter = new BrowseProjectFilter("esri_browseDialogFilters_shapefiles")
+            {
+                Name = "Shape Files"
             };
         }
 
@@ -249,7 +255,7 @@ namespace Geomo.ShapeFileClipper
             //var dialog = new CommonOpenFileDialog { IsFolderPicker = true };
             var dialog = new OpenItemDialog()
             {
-                Title = "Select Output Location",
+                Title = "Select Output Directory",
                 BrowseFilter = _workspaceBrowseFilter
             };
 

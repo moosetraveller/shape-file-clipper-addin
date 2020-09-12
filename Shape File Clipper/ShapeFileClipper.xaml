@@ -28,7 +28,7 @@
         <Label Content="Clip Extent" HorizontalAlignment="Left" Margin="10,106,0,0" VerticalAlignment="Top" Width="139" FontWeight="Bold" Height="24"/>
         <TextBox x:Name="ClipExtentTextBox" HorizontalAlignment="Left" Height="24" Margin="154,106,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="401" IsReadOnly="True"/>
         <Button Style="{DynamicResource Esri_Button}" FontFamily="Segoe MDL2 Assets" Content="&#xec51;" HorizontalAlignment="Left" Height="24" Margin="560,106,0,0" VerticalAlignment="Top" Width="69" Click="OnSelectClipExtentClicked"/>
-        <Label Content="Output Location" HorizontalAlignment="Left" Margin="10,142,0,0" VerticalAlignment="Top" Width="139" FontWeight="Bold" Height="24"/>
+        <Label Content="Output Directory" HorizontalAlignment="Left" Margin="10,142,0,0" VerticalAlignment="Top" Width="139" FontWeight="Bold" Height="24"/>
         <TextBox x:Name="OutputDirectoryTextBox"  HorizontalAlignment="Left" Height="24" Margin="154,142,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="401" IsReadOnly="True"/>
         <Button Style="{DynamicResource Esri_Button}" FontFamily="Segoe MDL2 Assets" Content="&#xec51;" HorizontalAlignment="Left" Height="24" Margin="560,142,0,0" VerticalAlignment="Top" Width="69" Click="OnSelectOutputDirectoryClicked" RenderTransformOrigin="0.535,-0.015"/>
         <Button Style="{DynamicResource Esri_Button}" x:Name="RunButton" IsDefault="True" Content="Run" HorizontalAlignment="Left" Height="24" Margin="541,348,0,0" VerticalAlignment="Top" Width="89" Click="OnExecuteClicked" RenderTransformOrigin="0.535,-0.015" IsEnabled="False" FontWeight="Bold"/>
