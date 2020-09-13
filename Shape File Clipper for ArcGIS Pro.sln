@@ -12,11 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Screenshot.png = Screenshot.png
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Misc", "Misc", "{0D366992-5F6C-46E6-8CB6-721E3048D2BA}"
-	ProjectSection(SolutionItems) = preProject
-		Screenshot.png = Screenshot.png
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,9 +25,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{0D366992-5F6C-46E6-8CB6-721E3048D2BA} = {A1DE1873-ABF6-45DC-BAF4-4621E13B26A7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {68512259-408E-4C29-9432-0AC0D3E1172C}
