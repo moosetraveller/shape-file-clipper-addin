@@ -6,8 +6,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="Shape File Clipper by Cartomo" Height="410.5" Width="645.756"
-        WindowStartupLocation="CenterOwner" ScrollViewer.VerticalScrollBarVisibility="Disabled" ShowMaxRestoreButton="False" ResizeMode="NoResize"
+        Title="Shape File Clipper by Cartomo"
+        WindowStartupLocation="CenterOwner" ScrollViewer.VerticalScrollBarVisibility="Disabled" ShowMaxRestoreButton="False" 
+        ResizeMode="NoResize" SizeToContent="WidthAndHeight"
     >
     <controls:ProWindow.Resources>
         <ResourceDictionary>
@@ -16,43 +17,74 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </controls:ProWindow.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <ListBox ItemContainerStyle="{DynamicResource Esri_ListBoxItemHighlightBrush}" x:Name="SelectionList" AllowDrop="True" HorizontalAlignment="Left" Height="82" Margin="154,10,0,0" VerticalAlignment="Top" Width="401" SelectionMode="Extended" />
-        <Button Style="{DynamicResource Esri_Button}" FontFamily="Segoe MDL2 Assets" Content="&#xecc8;"  HorizontalAlignment="Left" Height="24" Margin="560,10,0,0" VerticalAlignment="Top" Width="24" Click="OnAddFileClicked"/>
-        <Button Style="{DynamicResource Esri_Button}" x:Name="RemoveFileButton" FontFamily="Segoe MDL2 Assets" Content="&#xecc9;" HorizontalAlignment="Left" Height="24" Margin="560,39,0,0" VerticalAlignment="Top" Width="69" Click="OnRemoveFileClicked" IsEnabled="False"/>
-        <Button Style="{DynamicResource Esri_Button}" x:Name="ClearSelectionButton" FontFamily="Segoe MDL2 Assets" Content="&#xe8e6;" HorizontalAlignment="Left" Height="24" Margin="560,68,0,0" VerticalAlignment="Top" Width="69" Click="OnClearSelectionClicked" IsEnabled="False"/>
-        <Label Content="Shape Files" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontWeight="Bold" Width="139" RenderTransformOrigin="0.504,0.154"/>
-        <Label Content="Clip Extent" HorizontalAlignment="Left" Margin="10,106,0,0" VerticalAlignment="Top" Width="139" FontWeight="Bold" Height="24"/>
-        <TextBox x:Name="ClipExtentTextBox" HorizontalAlignment="Left" Height="24" Margin="154,106,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="401" IsReadOnly="True"/>
-        <Button Style="{DynamicResource Esri_Button}" FontFamily="Segoe MDL2 Assets" Content="&#xec51;" HorizontalAlignment="Left" Height="24" Margin="560,106,0,0" VerticalAlignment="Top" Width="69" Click="OnSelectClipExtentClicked"/>
-        <Label Content="Output Directory" HorizontalAlignment="Left" Margin="10,142,0,0" VerticalAlignment="Top" Width="139" FontWeight="Bold" Height="24"/>
-        <TextBox x:Name="OutputDirectoryTextBox"  HorizontalAlignment="Left" Height="24" Margin="154,142,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="401" IsReadOnly="True"/>
-        <Button Style="{DynamicResource Esri_Button}" FontFamily="Segoe MDL2 Assets" Content="&#xec51;" HorizontalAlignment="Left" Height="24" Margin="560,142,0,0" VerticalAlignment="Top" Width="69" Click="OnSelectOutputDirectoryClicked" RenderTransformOrigin="0.535,-0.015"/>
-        <Button Style="{DynamicResource Esri_Button}" x:Name="RunButton" IsDefault="True" Content="Run" HorizontalAlignment="Left" Height="24" Margin="541,348,0,0" VerticalAlignment="Top" Width="89" Click="OnExecuteClicked" RenderTransformOrigin="0.535,-0.015" IsEnabled="False" FontWeight="Bold"/>
-        <Button Style="{DynamicResource Esri_Button}" Content="Close" IsCancel="True" HorizontalAlignment="Left" Height="24" Margin="447,348,0,0" VerticalAlignment="Top" Width="89" Click="OnCloseClicked" RenderTransformOrigin="0.535,-0.015"/>
-        <Label Content="Postfix" HorizontalAlignment="Left" Margin="10,210,0,0" VerticalAlignment="Top" Width="139" Height="24"/>
-        <TextBox x:Name="PostfixTextBox"  HorizontalAlignment="Left" Height="24" Margin="154,210,0,0" TextWrapping="Wrap" Text="_Clipped" VerticalAlignment="Top" Width="401"/>
-        <ComboBox x:Name="OverwriteModeComboBox" HorizontalAlignment="Left" Height="24  " Margin="154,171,0,0" VerticalAlignment="Top" Width="401"/>
-        <Button Style="{DynamicResource Esri_Button}" x:Name="OpenOutputDirectoryButton" Content="Open Output Directory" HorizontalAlignment="Left" Height="24" Margin="10,348,0,0" VerticalAlignment="Top" Width="160" Click="OnOpenOutputDirectoryClicked" IsEnabled="False" RenderTransformOrigin="0.535,-0.015"/>
 
-        <Button Style="{DynamicResource Esri_Button}" x:Name="SelectCoordinateSystemButton" FontFamily="Segoe MDL2 Assets" Content="&#xe909;" IsEnabled="False" HorizontalAlignment="Left" Height="24" Margin="560,280,0,0" VerticalAlignment="Top" Width="70" Click="OnSelectReferenceSystemClicked" RenderTransformOrigin="0.535,-0.015"/>
-        <TextBox x:Name="CoordinateSystemTextBox"  HorizontalAlignment="Left" Height="24" IsEnabled="False" Margin="154,280,0,0" TextWrapping="Wrap" Text="" IsReadOnly="True" VerticalAlignment="Top" Width="401"/>
-        <Label x:Name="CoordinateSystemLabel" Content="Coordinate System" Height="24" HorizontalAlignment="Left" IsEnabled="False" Margin="10,280,0,0" VerticalAlignment="Top" Width="118"/>
-        <CheckBox Style="{DynamicResource Esri_CheckboxToggleSwitch}" x:Name="DoProjectCheckBox" Content="Project Result" HorizontalAlignment="Left" Margin="14,251,0,0" VerticalAlignment="Top"
-                  Checked="DoProjectCheckBox_Checked" Unchecked="DoProjectCheckBox_Unchecked"  Width="236" Height="24"/>
+    <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Horizontal" Margin="10 10 10 10">
+            <Label Width="140" FontWeight="Bold">Shape File</Label>
+            <ListBox x:Name="SelectionList" AllowDrop="True" SelectionMode="Extended" 
+                     Width="400" ItemContainerStyle="{DynamicResource Esri_ListBoxItemHighlightBrush}"></ListBox>
+            <StackPanel Orientation="Vertical">
+                <Button x:Name="AddFileButton" Click="OnAddFileClicked"
+                        FontFamily="Segoe MDL2 Assets" Content="&#xecc8;" Margin="2 0 0 2" Style="{DynamicResource Esri_Button}"></Button>
+                <Button x:Name="RemoveFileButton" Click="OnRemoveFileClicked" IsEnabled="False"
+                        FontFamily="Segoe MDL2 Assets" Content="&#xecc9;"  Margin="2 2 0 2" Style="{DynamicResource Esri_Button}"></Button>
+                <Button x:Name="ClearSelectionButton" Click="OnClearSelectionClicked" IsEnabled="False"
+                        FontFamily="Segoe MDL2 Assets" Content="&#xe8e6;"  Margin="2 2 0 0" Style="{DynamicResource Esri_Button}"></Button>
+            </StackPanel>
+        </StackPanel>
 
-        <!--
-        <ComboBox x:Name="ProjectionComboBox" HorizontalAlignment="Left" Height="0" Margin="133,270,0,0" VerticalAlignment="Top" Width="391" IsTextSearchEnabled="False">
-            <ComboBox.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <VirtualizingStackPanel />
-                </ItemsPanelTemplate>
-            </ComboBox.ItemsPanel>
-        </ComboBox>
-        <Label Content="Projection" HorizontalAlignment="Left" Margin="15,268,0,0" VerticalAlignment="Top" Width="112" FontWeight="Bold"/>
-        -->
-    </Grid>
+        <StackPanel Orientation="Horizontal" Margin="10 0 10 10">
+            <Label Width="140" FontWeight="Bold">Clip Extent</Label>
+            <TextBox x:Name="ClipExtentTextBox" IsReadOnly="True"
+                     Width="400"></TextBox>
+            <Button Click="OnSelectClipExtentClicked" 
+                    FontFamily="Segoe MDL2 Assets"  Content="&#xec51;" Margin="2 0 0 0" Style="{DynamicResource Esri_Button}" />
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Margin="10 0 10 4">
+            <Label Width="140" FontWeight="Bold">Output Directory</Label>
+            <TextBox x:Name="OutputDirectoryTextBox" IsReadOnly="True"
+                     Width="400"></TextBox>
+            <Button Click="OnSelectOutputDirectoryClicked" 
+                    FontFamily="Segoe MDL2 Assets"  Content="&#xec51;" Margin="2 0 0 0" Style="{DynamicResource Esri_Button}" />
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="10 0 10 10">
+            <ComboBox x:Name="OverwriteModeComboBox" Width="400" Margin="140 0 0 0" Height="25"/>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Margin="10 0 10 10">
+            <Label Width="140">Postfix</Label>
+            <TextBox x:Name="PostfixTextBox" Text="_Clipped"
+                     Width="400"></TextBox>
+        </StackPanel>
+
+        <StackPanel Orientation="Horizontal" Margin="10 10 10 4">
+            <Label Width="140">Project Result?</Label>
+            <CheckBox x:Name="DoProjectCheckBox" Checked="DoProjectCheckBox_Checked" Unchecked="DoProjectCheckBox_Unchecked" 
+                      Style="{DynamicResource Esri_CheckboxToggleSwitch}" />
+            <Label FontStyle="Italic">Not yet implemented... Coming soon :)</Label>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="10 0 10 10">
+            <Label x:Name="CoordinateSystemLabel" Content="Coordinate System" IsEnabled="False"
+                   Width="140"/>
+            <TextBox x:Name="CoordinateSystemTextBox" IsEnabled="False" IsReadOnly="True"
+                     Width="400"/>
+            <Button x:Name="SelectCoordinateSystemButton" IsEnabled="False" Click="OnSelectReferenceSystemClicked"
+                    FontFamily="Segoe MDL2 Assets" Content="&#xe909;" Margin="2 0 0 0" Style="{DynamicResource Esri_Button}" />
+        </StackPanel>
+
+        <DockPanel Margin="10 20 10 10" HorizontalAlignment="Stretch">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <Button x:Name="OpenOutputDirectoryButton" Click="OnOpenOutputDirectoryClicked" IsEnabled="False" 
+                        Content="Open Output Directory" Margin="0 0 10 0" Style="{DynamicResource Esri_Button}"/>
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button IsCancel="True" Click="OnCloseClicked"
+                        Content="Close" Margin="10 0 0 0" Style="{DynamicResource Esri_Button}"/>
+                <Button x:Name="RunButton"  Click="OnExecuteClicked" IsEnabled="False" IsDefault="True" 
+                        Content="Run" FontWeight="Bold" Margin="10 0 0 0" Style="{DynamicResource Esri_Button}"/>
+            </StackPanel>
+        </DockPanel>
+
+    </StackPanel>
 </controls:ProWindow>

@@ -7,9 +7,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="Coordinate System Selection" Height="500" Width="500"
+        Title="Coordinate System Selection"
         WindowStartupLocation="CenterOwner"
-        Closing="OnClosing" ResizeMode="NoResize"
+        Closing="OnClosing" ResizeMode="NoResize" SizeToContent="WidthAndHeight"
     >
     <controls:ProWindow.Resources>
         <ResourceDictionary>
@@ -18,11 +18,17 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </controls:ProWindow.Resources>
-    <Grid>
-        <mappingControls:CoordinateSystemsControl x:Name="CoordinateSystemSelector" Margin="10,10,10,39.5" />
-        <Button Style="{DynamicResource Esri_Button}" Content="Select" HorizontalAlignment="Left" Margin="410,438,0,0" VerticalAlignment="Top" Width="75" 
-                x:Name="SelectButton" Click="OnSelectButtonClick" IsEnabled="False"/>
-        <Button Style="{DynamicResource Esri_Button}" Content="Cancel" HorizontalAlignment="Left" Margin="330,438,0,0" VerticalAlignment="Top" Width="75" 
-                Click="OnCancelButtonClick"/>
-    </Grid>
+    <StackPanel Orientation="Vertical">
+        <StackPanel Orientation="Vertical"> <!-- Margin="10" => element already has a margin -->
+            <mappingControls:CoordinateSystemsControl x:Name="CoordinateSystemSelector" Height="500" Width="475"/>
+        </StackPanel>
+        <DockPanel Margin="10 20 10 10" HorizontalAlignment="Stretch">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Name="SelectButton" Click="OnSelectButtonClick" IsEnabled="False"
+                        Content="Select" Margin="10 0 0 0" Style="{DynamicResource Esri_Button}"/>
+                <Button Click="OnCancelButtonClick" 
+                        Content="Cancel" Margin="10 0 0 0" Style="{DynamicResource Esri_Button}"/>
+            </StackPanel>
+        </DockPanel>
+    </StackPanel>
 </controls:ProWindow>
