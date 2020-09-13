@@ -1,20 +1,22 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using ArcGIS.Desktop.Core.Geoprocessing;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 
 namespace Geomo.ShapeFileClipper.GeoProcessing
 {
-    class ClipTool
+    public class SfcTool // TODO rename and refactor?
     {
         private readonly string _clipExtentShapeFile;
         private readonly string _outputDirectory;
         private readonly string _postfix;
         private readonly string _backupFolderName;
         private readonly OverwriteMode _overwriteMode;
+        private readonly string _targetReferenceSystem;
         private readonly CancelableProgressorSource _cancelHandler;
 
-        public ClipTool(string clipExtentShapeFile, string outputDirectory, string postfix, string backupFolderName,
+        public SfcTool(string clipExtentShapeFile, string outputDirectory, string postfix, string backupFolderName,
             OverwriteMode overwriteMode, CancelableProgressorSource cancelHandler)
         {
             this._clipExtentShapeFile = clipExtentShapeFile;
@@ -25,13 +27,19 @@ namespace Geomo.ShapeFileClipper.GeoProcessing
             this._cancelHandler = cancelHandler;
         }
 
+        public SfcTool(string clipExtentShapeFile, string outputDirectory, string postfix, string targetReferenceSystem, string backupFolderName,
+            OverwriteMode overwriteMode, CancelableProgressorSource cancelHandler) : this(clipExtentShapeFile, outputDirectory, postfix, backupFolderName, overwriteMode, cancelHandler)
+        {
+            this._targetReferenceSystem = targetReferenceSystem;
+        }
+
         private async Task<bool> CopyShapeFile(string shapeFile, string targetPath)
         {
 
             var copyToolParams
                 = await QueuedTask.Run(() => Geoprocessing.MakeValueArray(shapeFile, targetPath));
 
-            IGPResult result = await Geoprocessing.ExecuteToolAsync("management.CopyFeatures", copyToolParams, null,
+            var result = await Geoprocessing.ExecuteToolAsync("management.CopyFeatures", copyToolParams, null,
                 _cancelHandler.Progressor, GPExecuteToolFlags.None | GPExecuteToolFlags.GPThread);
 
             return !result.IsFailed;
@@ -55,13 +63,24 @@ namespace Geomo.ShapeFileClipper.GeoProcessing
 
         }
 
+        private async Task<bool> ProjectShapeFile(string shapeFile, string outputPath)
+        {
+            var projectToolParams
+                = await QueuedTask.Run(() => Geoprocessing.MakeValueArray(shapeFile, outputPath, _targetReferenceSystem));
+
+            var result = await Geoprocessing.ExecuteToolAsync("management.Project", projectToolParams, null,
+                _cancelHandler.Progressor, GPExecuteToolFlags.None | GPExecuteToolFlags.GPThread);
+
+            return !result.IsFailed;
+        }
+
         private async Task<bool> ClipShapeFile(string shapeFile, string outputPath)
         {
 
             var clipToolParams
                 = await QueuedTask.Run(() => Geoprocessing.MakeValueArray(shapeFile, _clipExtentShapeFile, outputPath));
 
-            IGPResult result = await Geoprocessing.ExecuteToolAsync("analysis.Clip", clipToolParams, null,
+            var result = await Geoprocessing.ExecuteToolAsync("analysis.Clip", clipToolParams, null,
                 _cancelHandler.Progressor, GPExecuteToolFlags.None | GPExecuteToolFlags.GPThread);
 
             return !result.IsFailed;
@@ -91,7 +110,26 @@ namespace Geomo.ShapeFileClipper.GeoProcessing
                     return false;
             }
 
-            return await ClipShapeFile(shapeFile, outputPath);
+            if (string.IsNullOrWhiteSpace(_targetReferenceSystem))
+            {
+                return await ClipShapeFile(shapeFile, outputPath);
+            }
+
+            var tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            Directory.CreateDirectory(tempDir);
+
+            var tempOutputPath = Path.Combine(tempDir, Path.GetFileName(outputPath));
+
+            if (await ClipShapeFile(shapeFile, tempOutputPath))
+            {
+                if (await ProjectShapeFile(tempOutputPath, outputPath))
+                {
+                    Directory.Delete(tempDir, true);
+                    return true;
+                }
+            }
+
+            return false;
 
         }
     }

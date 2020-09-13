@@ -62,7 +62,6 @@
             <Label Width="140">Project Result?</Label>
             <CheckBox x:Name="DoProjectCheckBox" Checked="DoProjectCheckBox_Checked" Unchecked="DoProjectCheckBox_Unchecked" 
                       Style="{DynamicResource Esri_CheckboxToggleSwitch}" />
-            <Label FontStyle="Italic">Not yet implemented... Coming soon :)</Label>
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="10 0 10 10">
             <Label x:Name="CoordinateSystemLabel" Content="Coordinate System" IsEnabled="False"

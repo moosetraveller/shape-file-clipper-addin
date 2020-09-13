@@ -127,7 +127,7 @@
     <Compile Include="ArcCoordinateSystemSelectionWindow.xaml.cs">
       <DependentUpon>ArcCoordinateSystemSelectionWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GeoProcessing\ClipTool.cs" />
+    <Compile Include="GeoProcessing\SfcTool.cs" />
     <Compile Include="GeoProcessing\OverwriteMode.cs" />
     <Compile Include="Utils\ComboBoxValue.cs" />
     <Compile Include="CustomCoordinateSystemTree\CoordinateSystemTreeComparer.cs" />

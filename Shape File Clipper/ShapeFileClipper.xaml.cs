@@ -29,7 +29,7 @@ namespace Geomo.ShapeFileClipper
 
         private ObservableCollection<string> _selectedShapeFiles;
         private ObservableCollection<ComboBoxValue<OverwriteMode>> _overwriteModes;
-        private object _selectedCoordinateSystem;
+        private CoordinateSystemSelection _selectedCoordinateSystem;
 
         public ShapeFileClipper()
         {
@@ -223,8 +223,13 @@ namespace Geomo.ShapeFileClipper
             var backupFolderName = DateTime.Now.ToString("yyyyMMddHHmmss");
             var overwriteMode = ((ComboBoxValue<OverwriteMode>)OverwriteModeComboBox.SelectedItem).Value;
             var cancelHandler = new CancelableProgressorSource(progressDialog);
+            string targetReferenceSystem = null;
+            if (DoProjectCheckBox.IsChecked ?? false)
+            {
+                targetReferenceSystem = _selectedCoordinateSystem?.Wkid?.ToString();
+            }
 
-            var clipController = new ClipTool(clipExtentShapeFile, outputDirectory, postfix, backupFolderName, overwriteMode, cancelHandler);
+            var clipController = new SfcTool(clipExtentShapeFile, outputDirectory, postfix, targetReferenceSystem, backupFolderName, overwriteMode, cancelHandler);
 
             foreach (var shapeFile in _selectedShapeFiles)
             {
