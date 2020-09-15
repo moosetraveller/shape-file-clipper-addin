@@ -7,7 +7,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="Coordinate System Selection"
+        Title="Select Reference System"
         WindowStartupLocation="CenterOwner"
         Closing="OnClosing" ResizeMode="NoResize" SizeToContent="WidthAndHeight"
     >
@@ -24,10 +24,12 @@
         </StackPanel>
         <DockPanel Margin="10 20 10 10" HorizontalAlignment="Stretch">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button x:Name="SelectButton" Click="OnSelectButtonClick" IsEnabled="False"
-                        Content="Select" Margin="10 0 0 0" Style="{DynamicResource Esri_Button}"/>
                 <Button Click="OnCancelButtonClick" 
-                        Content="Cancel" Margin="10 0 0 0" Style="{DynamicResource Esri_Button}"/>
+                        Content="Cancel" ToolTip="Discards the selected reference system and closes the dialog" 
+                        Margin="10 0 0 0" Style="{DynamicResource Esri_Button}"/>
+                <Button x:Name="SelectButton" Click="OnSelectButtonClick" IsEnabled="False"
+                        Content="Select" ToolTip="Accepts the selected reference system and closes the dialog" 
+                        Margin="10 0 0 0" Style="{DynamicResource Esri_Button}"/>
             </StackPanel>
         </DockPanel>
     </StackPanel>

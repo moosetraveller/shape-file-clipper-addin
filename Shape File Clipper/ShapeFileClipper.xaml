@@ -25,11 +25,13 @@
                      Width="400" ItemContainerStyle="{DynamicResource Esri_ListBoxItemHighlightBrush}"></ListBox>
             <StackPanel Orientation="Vertical">
                 <Button x:Name="AddFileButton" Click="OnAddFileClicked"
-                        FontFamily="Segoe MDL2 Assets" Content="&#xecc8;" Margin="2 0 0 2" Style="{DynamicResource Esri_Button}"></Button>
+                        Content="Add ..." ToolTip="Adds a shape file to list on the left"
+                        Margin="2 0 0 2" Style="{DynamicResource Esri_Button}"></Button>
                 <Button x:Name="RemoveFileButton" Click="OnRemoveFileClicked" IsEnabled="False"
-                        FontFamily="Segoe MDL2 Assets" Content="&#xecc9;"  Margin="2 2 0 2" Style="{DynamicResource Esri_Button}"></Button>
+                        Content="Remove"  ToolTip="Removes selected shape file(s) from the list on the left" 
+                        Margin="2 2 0 2" Style="{DynamicResource Esri_Button}"></Button>
                 <Button x:Name="ClearSelectionButton" Click="OnClearSelectionClicked" IsEnabled="False"
-                        FontFamily="Segoe MDL2 Assets" Content="&#xe8e6;"  Margin="2 2 0 0" Style="{DynamicResource Esri_Button}"></Button>
+                        Content="Clear List" ToolTip="Clears the list of shape files on the left"  Margin="2 2 0 0" Style="{DynamicResource Esri_Button}"></Button>
             </StackPanel>
         </StackPanel>
 
@@ -38,7 +40,8 @@
             <TextBox x:Name="ClipExtentTextBox" IsReadOnly="True"
                      Width="400"></TextBox>
             <Button Click="OnSelectClipExtentClicked" 
-                    FontFamily="Segoe MDL2 Assets"  Content="&#xec51;" Margin="2 0 0 0" Style="{DynamicResource Esri_Button}" />
+                    Content="Select ..." ToolTip="Selects a clip extent" 
+                    Margin="2 0 0 0" Style="{DynamicResource Esri_Button}" />
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Margin="10 0 10 4">
@@ -46,7 +49,8 @@
             <TextBox x:Name="OutputDirectoryTextBox" IsReadOnly="True"
                      Width="400"></TextBox>
             <Button Click="OnSelectOutputDirectoryClicked" 
-                    FontFamily="Segoe MDL2 Assets"  Content="&#xec51;" Margin="2 0 0 0" Style="{DynamicResource Esri_Button}" />
+                    Content="Select ..." ToolTip="Selects an output directory" 
+                    Margin="2 0 0 0" Style="{DynamicResource Esri_Button}" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="10 0 10 10">
             <ComboBox x:Name="OverwriteModeComboBox" Width="400" Margin="140 0 0 0" Height="25"/>
@@ -61,27 +65,31 @@
         <StackPanel Orientation="Horizontal" Margin="10 10 10 4">
             <Label Width="140">Project Result?</Label>
             <CheckBox x:Name="DoProjectCheckBox" Checked="DoProjectCheckBox_Checked" Unchecked="DoProjectCheckBox_Unchecked" 
+                      ToolTip="If enabled, projects the clipped data to the reference system selected below"
                       Style="{DynamicResource Esri_CheckboxToggleSwitch}" />
         </StackPanel>
         <StackPanel Orientation="Horizontal" Margin="10 0 10 10">
-            <Label x:Name="CoordinateSystemLabel" Content="Coordinate System" IsEnabled="False"
+            <Label x:Name="CoordinateSystemLabel" Content="Reference System" IsEnabled="False"
                    Width="140"/>
             <TextBox x:Name="CoordinateSystemTextBox" IsEnabled="False" IsReadOnly="True"
                      Width="400"/>
             <Button x:Name="SelectCoordinateSystemButton" IsEnabled="False" Click="OnSelectReferenceSystemClicked"
-                    FontFamily="Segoe MDL2 Assets" Content="&#xe909;" Margin="2 0 0 0" Style="{DynamicResource Esri_Button}" />
+                    Content="Select ..." ToolTip="Selects a reference system from a list" Margin="2 0 0 0" Style="{DynamicResource Esri_Button}" />
         </StackPanel>
 
         <DockPanel Margin="10 20 10 10" HorizontalAlignment="Stretch">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
                 <Button x:Name="OpenOutputDirectoryButton" Click="OnOpenOutputDirectoryClicked" IsEnabled="False" 
-                        Content="Open Output Directory" Margin="0 0 10 0" Style="{DynamicResource Esri_Button}"/>
+                        Content="Open Output Directory" ToolTip="Opens the selected output directory" 
+                        Margin="0 0 10 0" Style="{DynamicResource Esri_Button}"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button IsCancel="True" Click="OnCloseClicked"
-                        Content="Close" Margin="10 0 0 0" Style="{DynamicResource Esri_Button}"/>
+                        Content="Close" ToolTip="Closes this dialog and discards selection/configuration" 
+                        Margin="10 0 0 0" Style="{DynamicResource Esri_Button}"/>
                 <Button x:Name="RunButton"  Click="OnExecuteClicked" IsEnabled="False" IsDefault="True" 
-                        Content="Run" FontWeight="Bold" Margin="10 0 0 0" Style="{DynamicResource Esri_Button}"/>
+                        Content="Run" ToolTip="Clips (and project) selected shape files using above's configuration" 
+                        FontWeight="Bold" Margin="10 0 0 0" Style="{DynamicResource Esri_Button}"/>
             </StackPanel>
         </DockPanel>
 
