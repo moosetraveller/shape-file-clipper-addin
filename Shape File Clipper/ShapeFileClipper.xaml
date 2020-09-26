@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:extensions="clr-namespace:ArcGIS.Desktop.Extensions;assembly=ArcGIS.Desktop.Extensions"
         mc:Ignorable="d"
-        Title="Shape File Clipper by Cartomo"
+        Title="Spatial Data Clipper by kartomo.com"
         WindowStartupLocation="CenterOwner" ScrollViewer.VerticalScrollBarVisibility="Disabled" ShowMaxRestoreButton="False" 
         ResizeMode="NoResize" SizeToContent="WidthAndHeight"
     >
@@ -20,7 +20,10 @@
 
     <StackPanel Orientation="Vertical">
         <StackPanel Orientation="Horizontal" Margin="10 10 10 10">
-            <Label Width="140" FontWeight="Bold">Shape File</Label>
+            <Label Width="140" FontWeight="Bold"
+                   ToolTip="Can be shape files, file geodatabase layer or a Zip file.">
+                <TextBlock>Layers</TextBlock>
+            </Label>
             <ListBox x:Name="SelectionList" AllowDrop="True" SelectionMode="Extended" 
                      Width="400" ItemContainerStyle="{DynamicResource Esri_ListBoxItemHighlightBrush}"></ListBox>
             <StackPanel Orientation="Vertical">
@@ -36,7 +39,10 @@
         </StackPanel>
 
         <StackPanel Orientation="Horizontal" Margin="10 0 10 10">
-            <Label Width="140" FontWeight="Bold">Clip Extent</Label>
+            <Label Width="140" FontWeight="Bold"
+                   ToolTip="Can be a shape file or a file geodatabase layer.">
+                Clip Extent
+            </Label>
             <TextBox x:Name="ClipExtentTextBox" IsReadOnly="True"
                      Width="400"></TextBox>
             <Button Click="OnSelectClipExtentClicked" 

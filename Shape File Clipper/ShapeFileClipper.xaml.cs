@@ -6,12 +6,14 @@ using System.Windows;
 using ArcGIS.Desktop.Framework.Threading.Tasks;
 using MessageBox = ArcGIS.Desktop.Framework.Dialogs.MessageBox;
 using System.Diagnostics;
+using System.IO;
 using ArcGIS.Desktop.Catalog;
 using ArcGIS.Desktop.Core;
 using ArcGIS.Desktop.Framework.Controls;
 using Geomo.ShapeFileClipper.Utils;
 using Geomo.ShapeFileClipper.CustomCoordinateSystemTree;
 using Geomo.ShapeFileClipper.GeoProcessing;
+using System.IO.Compression;
 
 namespace Geomo.ShapeFileClipper
 {
@@ -25,7 +27,7 @@ namespace Geomo.ShapeFileClipper
 
         private BrowseProjectFilter _featureClassBrowseFilter;
         private BrowseProjectFilter _workspaceBrowseFilter;
-        private BrowseProjectFilter _shapeFileBrowseFilter;
+        private BrowseProjectFilter _outputExtentBrowseFilter;
 
         private ObservableCollection<string> _selectedShapeFiles;
         private ObservableCollection<ComboBoxValue<OverwriteMode>> _overwriteModes;
@@ -49,16 +51,20 @@ namespace Geomo.ShapeFileClipper
             // C:\Program Files\ArcGIS\Pro\Resources\SearchResources\Schema\BrowseFilters.xml
             _featureClassBrowseFilter = new BrowseProjectFilter("esri_browseDialogFilters_featureClasses_all")
             {
-                Name = "Shape Files/Feature Classes"
+                Name = "Shape Files/Feature Classes/Zip Files"
             };
+            _featureClassBrowseFilter.AddCanBeTypeId("file_zip");
+
             // use "esri_browseDialogFilters_workspaces_all" to include geodatabase locations
             _workspaceBrowseFilter = new BrowseProjectFilter("esri_browseDialogFilters_folders") 
             {
                 Name = "Folders/Datasets"
             };
-            _shapeFileBrowseFilter = new BrowseProjectFilter("esri_browseDialogFilters_shapefiles")
+
+            // use "esri_browseDialogFilters_shapefiles" for shape files only
+            _outputExtentBrowseFilter = new BrowseProjectFilter("esri_browseDialogFilters_featureClasses_all")
             {
-                Name = "Shape Files"
+                Name = "Shape Files/Feature Classes"
             };
         }
 
@@ -209,12 +215,37 @@ namespace Geomo.ShapeFileClipper
             Process.Start(OutputDirectoryTextBox.Text);
         }
 
+        private static bool IsZipFile(string fileName)
+        {
+            return fileName.ToLower().EndsWith(".zip");
+        }
+
+        private static IEnumerable<string> GetLayers(IList<string> selectedLayers, string tempPath)
+        {
+            var zipFiles = selectedLayers.Where(IsZipFile).ToList();
+            if (!zipFiles.Any())
+            {
+                return new List<string>(selectedLayers);
+            }
+            var layers = new List<string>(selectedLayers.Where(l => !IsZipFile(l)));
+            foreach (var zipFile in zipFiles)
+            {
+                var extractPath = Path.Combine(tempPath, Path.GetFileNameWithoutExtension(zipFile));
+                Directory.CreateDirectory(extractPath);
+                ZipFile.ExtractToDirectory(zipFile, extractPath);
+                var shapeFiles = Directory.GetFiles(tempPath, "*.shp", SearchOption.AllDirectories);
+                layers.AddRange(shapeFiles);
+            }
+            return layers;
+        }
+
+        // TODO: wrong place for business logic / method does to many things at once / refactoring needed
         private async void OnExecuteClicked(object sender, RoutedEventArgs e)
         {
 
             var progressDialog = new ProgressDialog("Running Shape File Clipper ...", "Cancel");
             progressDialog.Show();
-
+            
             var ignoredShapeFiles = new HashSet<string>();
 
             var clipExtentShapeFile = ClipExtentTextBox.Text;
@@ -231,14 +262,21 @@ namespace Geomo.ShapeFileClipper
 
             var clipController = new SfcTool(clipExtentShapeFile, outputDirectory, postfix, targetReferenceSystem, backupFolderName, overwriteMode, cancelHandler);
 
-            foreach (var shapeFile in _selectedShapeFiles)
+            var tempPath = Path.Combine(Path.GetTempPath(), $"ShapeFileClipper_{System.Guid.NewGuid()}");
+            Directory.CreateDirectory(tempPath);
+            var layers = await QueuedTask.Run(() => GetLayers(_selectedShapeFiles, tempPath));
+            
+            foreach (var layer in layers)
             {
-                var hasFailed = !await clipController.ProcessShapeFile(shapeFile);
+                var hasFailed = !await clipController.Process(layer);
                 if (hasFailed)
                 {
-                    ignoredShapeFiles.Add(shapeFile);
+                    ignoredShapeFiles.Add(layer);
                 }
             }
+
+            Directory.Delete(tempPath, true);
+
 
             if (ignoredShapeFiles.Count > 0)
             {
@@ -279,7 +317,7 @@ namespace Geomo.ShapeFileClipper
             //var dialog = new OpenFileDialog { DefaultExt = ".shp",  Filter = "Shape Files|*.shp" };
             var dialog = new OpenItemDialog()
             {
-                BrowseFilter = _featureClassBrowseFilter
+                BrowseFilter = _outputExtentBrowseFilter
             };
 
             if (dialog.ShowDialog() == true)

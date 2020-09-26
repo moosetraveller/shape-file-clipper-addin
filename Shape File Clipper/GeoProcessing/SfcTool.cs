@@ -63,7 +63,7 @@ namespace Geomo.ShapeFileClipper.GeoProcessing
 
         }
 
-        private async Task<bool> ProjectShapeFile(string shapeFile, string outputPath)
+        private async Task<bool> Project(string shapeFile, string outputPath)
         {
             var projectToolParams
                 = await QueuedTask.Run(() => Geoprocessing.MakeValueArray(shapeFile, outputPath, _targetReferenceSystem));
@@ -74,7 +74,7 @@ namespace Geomo.ShapeFileClipper.GeoProcessing
             return !result.IsFailed;
         }
 
-        private async Task<bool> ClipShapeFile(string shapeFile, string outputPath)
+        private async Task<bool> Clip(string shapeFile, string outputPath)
         {
 
             var clipToolParams
@@ -87,10 +87,10 @@ namespace Geomo.ShapeFileClipper.GeoProcessing
 
         }
 
-        public async Task<bool> ProcessShapeFile(string shapeFile)
+        public async Task<bool> Process(string layer)
         {
 
-            var shapeFileName = $"{Path.GetFileNameWithoutExtension(shapeFile)}_{_postfix}.shp";
+            var shapeFileName = $"{Path.GetFileNameWithoutExtension(layer)}{_postfix}.shp";
             var outputPath = Path.Combine(_outputDirectory, shapeFileName);
 
             switch (_overwriteMode)
@@ -112,7 +112,7 @@ namespace Geomo.ShapeFileClipper.GeoProcessing
 
             if (string.IsNullOrWhiteSpace(_targetReferenceSystem))
             {
-                return await ClipShapeFile(shapeFile, outputPath);
+                return await Clip(layer, outputPath);
             }
 
             var tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
@@ -120,9 +120,9 @@ namespace Geomo.ShapeFileClipper.GeoProcessing
 
             var tempOutputPath = Path.Combine(tempDir, Path.GetFileName(outputPath));
 
-            if (await ClipShapeFile(shapeFile, tempOutputPath))
+            if (await Clip(layer, tempOutputPath))
             {
-                if (await ProjectShapeFile(tempOutputPath, outputPath))
+                if (await Project(tempOutputPath, outputPath))
                 {
                     Directory.Delete(tempDir, true);
                     return true;
