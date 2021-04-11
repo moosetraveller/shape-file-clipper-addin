@@ -5,4 +5,5 @@ The project's intention is to explore ArcGIS Pro's .NET SDK, get familiar with t
 
 The Shape File Clipper Add-in may or may not add value to your workflow... You probably could just write a arcpy script or create a model to intergrate in your very own workflow and to achieve same outcome. :smirk:
 
+## Screenshot
 ![Shape File Clipper Add-in Screenshot](screenshot.png "Shape File Clipper Add-in Screenshot")
